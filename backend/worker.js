@@ -17,7 +17,7 @@ async function handleRequest(request) {
     const file = formData.get('file');
 
     let response;
-
+// redo all of this tomorrow!!! 
     if (file && file.type === 'text/csv') {
       const content = [{
         name: file.name,
