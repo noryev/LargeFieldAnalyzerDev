@@ -12,9 +12,10 @@ function App() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('large-field.deanlaughing.workers.dev', {
+      const response = await fetch('https://large-field.deanlaughing.workers.dev', {
         method: 'POST',
         body: formData,
+        mode: 'cors'
       });
 
       if (response.ok) {
