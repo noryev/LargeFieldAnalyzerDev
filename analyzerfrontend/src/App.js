@@ -12,7 +12,7 @@ function App() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('YOUR_CLOUDFLARE_WORKER_URL_HERE', {
+      const response = await fetch('large-field.deanlaughing.workers.dev', {
         method: 'POST',
         body: formData,
       });
