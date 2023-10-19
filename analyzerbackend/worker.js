@@ -8,6 +8,8 @@ addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
 });
 
+// Add notification that Web3.Storage correctly recieves file
+
 async function handleRequest(request) {
   // Handle CORS preflight request.
   if (request.method === 'OPTIONS') {
@@ -17,7 +19,7 @@ async function handleRequest(request) {
     const file = formData.get('file');
 
     let response;
-// redo all of this tomorrow!!! 
+    // redo all of this tomorrow!!! 
     if (file && file.type === 'text/csv') {
       const content = [{
         name: file.name,
@@ -50,7 +52,7 @@ function handleCORS(request) {
     headers.get("Origin") !== null &&
     headers.get("Access-Control-Request-Method") !== null &&
     headers.get("Access-Control-Request-Headers") !== null
-  ){
+  ) {
     // Handle CORS preflight requests.
     // If you want to check the requested method + headers you can do that here.
     let respHeaders = {
@@ -58,7 +60,7 @@ function handleCORS(request) {
       "Access-Control-Allow-Methods": "POST,OPTIONS",
       "Access-Control-Allow-Headers": headers.get("Access-Control-Request-Headers"),
       "Access-Control-Max-Age": "86400",
-      
+
     }
 
     return new Response(null, { headers: respHeaders });
@@ -66,6 +68,6 @@ function handleCORS(request) {
     let response = new Response('Please send a POST request with the .csv file.', { status: 400 });
     response.headers.set('Access-Control-Allow-Origin', '*');
     return response;
-    
+
   }
 }
