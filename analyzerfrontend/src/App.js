@@ -7,19 +7,19 @@ function App() {
   const handleUpload = async () => {
     const file = fileInput.current.files[0];
     if (!file) return;
-  
+
     const formData = new FormData();
     formData.append('file', file);
-  
+
     try {
       const response = await fetch('https://analyzer-backend.deanlaughing.workers.dev', {
         method: 'POST',
         body: formData,
         mode: 'cors'
       });
-  
+
       const responseData = await response.json(); // Assuming the server responds with JSON. If it's plain text, use response.text().
-  
+
       if (response.ok) {
         alert('File uploaded successfully!');
       } else {
@@ -31,12 +31,12 @@ function App() {
       alert('An error occurred. Please try again.');
     }
   };
-  
+
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Upload a CSV File</h1>
+        <h2>Upload a .CSV or IPFS CID</h2>
         <div>
           <input type="file" ref={fileInput} accept=".csv" />
           <button onClick={handleUpload}>Upload</button>
