@@ -36,7 +36,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h2>Upload a .CSV or IPFS CID</h2>
+        <h3>Upload a .CSV or IPFS CID</h3>
         <div>
           <input type="file" ref={fileInput} accept=".csv" />
           <button onClick={handleUpload}>Upload</button>
