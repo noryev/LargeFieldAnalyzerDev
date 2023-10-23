@@ -18,13 +18,14 @@ function App() {
         mode: 'cors'
       });
 
-      const responseData = await response.json(); // Assuming the server responds with JSON. If it's plain text, use response.text().
+      const responseText = await response.text();
 
       if (response.ok) {
         alert('File uploaded successfully!');
+        console.log('Server Response:', responseText);
       } else {
-        console.error("Server Response:", responseData);
-        alert(`Failed to upload file. Reason: ${responseData.message || 'Unknown error'}`);
+        console.error("Server Response:", responseText);
+        alert(`Failed to upload file. Reason: ${responseText || 'Unknown error'}`);
       }
     } catch (error) {
       console.error("There was an error uploading the file:", error);
@@ -32,11 +33,10 @@ function App() {
     }
   };
 
-
   return (
     <div className="App">
       <header className="App-header">
-        <h3>Upload a .CSV or IPFS CID</h3>
+        <h3>Upload a .CSV</h3>
         <div>
           <input type="file" ref={fileInput} accept=".csv" />
           <button onClick={handleUpload}>Upload</button>
@@ -47,4 +47,3 @@ function App() {
 }
 
 export default App;
-
