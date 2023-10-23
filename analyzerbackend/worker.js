@@ -11,7 +11,7 @@ async function handleRequest(request) {
 
     if (file && file.type === 'text/csv') {
       try {
-        const apiUrl = 'https://largedataanalyzer.cf.com/upload';
+        const apiUrl = 'https://large-field-analyzer.deanlaughing.workers.dev/upload';
         const response = await fetch(apiUrl, {
           method: 'POST',
           body: file,
