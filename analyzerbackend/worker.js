@@ -6,49 +6,35 @@ async function handleRequest(request) {
   if (request.method === 'OPTIONS') {
     return handleCORS(request);
   } else if (request.method === 'POST') {
-    const formData = await request.formData();
-    const file = formData.get('file');
+    try {
+      const data = await request.json();
+      const ipfsHash = data.ipfsHash;
 
-    if (file && file.type === 'text/csv') {
-      try {
-        const apiUrl = 'https://large-field-analyzer.deanlaughing.workers.dev/upload';
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          body: file,
-          headers: {
-            'Content-Type': 'text/csv',
-            // Include any authentication headers if necessary
-          },
-        });
-
-        if (response.ok) {
-          const result = await response.text(); // or .json() if your API returns JSON
-          return new Response(`File stored successfully: ${result}`, {
-            status: 200,
-            headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
-          });
-        } else {
-          return new Response('Failed to store the file on the server.', {
-            status: 500,
-            headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
-          });
-        }
-      } catch (error) {
-        return new Response('Failed to store the file on the server.', {
-          status: 500,
-          headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
+      if (!ipfsHash) {
+        return new Response('IPFS hash not provided.', {
+          status: 400,
+          headers: { 'Access-Control-Allow-Origin': '*' }
         });
       }
-    } else {
-      return new Response('Invalid file type. Only .csv accepted.', {
-        status: 400,
-        headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
+
+      // Do something with the IPFS hash, e.g., fetch content from IPFS, store it, etc.
+      const responseFromServer = `IPFS Hash Received: ${ipfsHash}`;
+
+      return new Response(responseFromServer, {
+        status: 200,
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
+
+    } catch (error) {
+      return new Response('Failed to process the request.', {
+        status: 500,
+        headers: { 'Access-Control-Allow-Origin': '*' }
       });
     }
   } else {
-    return new Response('Please send a POST request with the .csv file.', {
+    return new Response('Please send a POST request.', {
       status: 400,
-      headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
+      headers: { 'Access-Control-Allow-Origin': '*' }
     });
   }
 }
