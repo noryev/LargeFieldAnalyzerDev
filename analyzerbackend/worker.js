@@ -3,52 +3,61 @@ addEventListener('fetch', event => {
 });
 
 async function handleRequest(request) {
-  if (request.method === 'OPTIONS') {
-    return handleCORS(request);
-  } else if (request.method === 'POST') {
-    const formData = await request.formData();
-    const file = formData.get('file');
+  // ... [Previous code] ...
 
-    if (file && file.type === 'text/csv') {
-      try {
-        const apiUrl = 'https://large-field-analyzer.deanlaughing.workers.dev/upload';
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          body: file,
-          headers: {
-            'Content-Type': 'text/csv',
-            // Include any authentication headers if necessary
-          },
+} else if (request.method === 'POST') {
+  const formData = await request.formData();
+  const ipfsCID = formData.get('ipfsCID'); // Assuming the field is named 'ipfsCID'
+
+  if (ipfsCID) {
+    try {
+      // MongoDB Data API endpoint
+      const mongoDBEndpoint = 'https://us-east-2.aws.data.mongodb-api.com/app/data-uucwm/endpoint/data/v1';
+
+      // MongoDB Data API request payload
+      const payload = {
+        collection: 'your_collection_name',
+        database: 'your_database_name',
+        dataSource: 'your_data_source_name',
+        document: { ipfsCID }
+      };
+
+      // MongoDB Data API request
+      const mongoResponse = await fetch(`${mongoDBEndpoint}/action/insertOne`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Request-Headers': '*',
+          'api-key': 'your_mongodb_data_api_key'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const mongoResult = await mongoResponse.json();
+
+      if (mongoResponse.ok) {
+        return new Response(`IPFS CID stored successfully: ${JSON.stringify(mongoResult)}`, {
+          status: 200,
+          headers: { 'Access-Control-Allow-Origin': '*' }
         });
-
-        if (response.ok) {
-          const result = await response.text(); // or .json() if your API returns JSON
-          return new Response(`File stored successfully: ${result}`, {
-            status: 200,
-            headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
-          });
-        } else {
-          return new Response('Failed to store the file on the server.', {
-            status: 500,
-            headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
-          });
-        }
-      } catch (error) {
-        return new Response('Failed to store the file on the server.', {
+      } else {
+        console.error('MongoDB Error:', mongoResult);
+        return new Response('Failed to store the IPFS CID in MongoDB.', {
           status: 500,
-          headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
+          headers: { 'Access-Control-Allow-Origin': '*' }
         });
       }
-    } else {
-      return new Response('Invalid file type. Only .csv accepted.', {
-        status: 400,
-        headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
+    } catch (error) {
+      console.error('MongoDB Error:', error);
+      return new Response('Failed to store the IPFS CID in MongoDB.', {
+        status: 500,
+        headers: { 'Access-Control-Allow-Origin': '*' }
       });
     }
   } else {
-    return new Response('Please send a POST request with the .csv file.', {
+    return new Response('Invalid input. Please provide an IPFS CID.', {
       status: 400,
-      headers: { 'Access-Control-Allow-Origin': '*' } // Adjust as needed for security
+      headers: { 'Access-Control-Allow-Origin': '*' }
     });
   }
 }
