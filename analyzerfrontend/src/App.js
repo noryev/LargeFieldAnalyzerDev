@@ -7,13 +7,13 @@ function App() {
   const handleUpload = async () => {
     if (!ipfsCID.trim()) return alert('Please enter an IPFS CID.');
 
-    const formData = new FormData();
-    formData.append('ipfsCID', ipfsCID);
-
     try {
       const response = await fetch('https://divide-perennial-vqus8gw.dappling.network/your-worker-route', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ipfsCID }),
         mode: 'cors'
       });
 
