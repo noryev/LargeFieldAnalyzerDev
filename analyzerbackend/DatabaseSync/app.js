@@ -1,12 +1,12 @@
 require('dotenv').config();
-
 const { MongoClient } = require('mongodb');
 const IPFS = require('ipfs-http-client');
+const fs = require('fs');
 
 async function downloadFromIPFS() {
-    const uri = 'your_mongo_connection_string';
-    const dbName = 'your_database_name';
-    const collectionName = 'your_collection_name';
+    const uri = process.env.MONGO_URI;
+    const dbName = process.env.DB_NAME;
+    const collectionName = process.env.COLLECTION_NAME;
 
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     const ipfs = IPFS.create(); // Connecting to IPFS on the default API address http://localhost:5001
@@ -27,7 +27,7 @@ async function downloadFromIPFS() {
                     chunks.push(chunk);
                 }
                 const content = Buffer.concat(chunks);
-                require('fs').writeFileSync(`./downloads/${doc.ipfsCID}.txt`, content);
+                fs.writeFileSync(`./downloads/${doc.ipfsCID}.txt`, content);
                 console.log('File downloaded and saved to disk');
             }
         });
