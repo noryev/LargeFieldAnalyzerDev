@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
-const { create } = require('ipfs-http-client');
+const { create } = require('helia');
 const fs = require('fs');
 
 async function downloadFromIPFS() {
@@ -9,7 +9,7 @@ async function downloadFromIPFS() {
     const collectionName = process.env.COLLECTION_NAME;
 
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    const ipfs = create(); // Connecting to IPFS on the default API address http://localhost:5001
+    const ipfs = create('/ip4/127.0.0.1/tcp/5001'); // Adjust the IPFS API address if necessary
 
     try {
         await client.connect();
@@ -22,13 +22,13 @@ async function downloadFromIPFS() {
         await cursor.forEach(async (doc) => {
             if (doc.ipfsCID) {
                 console.log(`Downloading content for CID: ${doc.ipfsCID}`);
-                const chunks = [];
-                for await (const chunk of ipfs.cat(doc.ipfsCID)) {
-                    chunks.push(chunk);
+                try {
+                    const content = await ipfs.cat(doc.ipfsCID);
+                    fs.writeFileSync(`./downloads/${doc.ipfsCID}.txt`, content);
+                    console.log('File downloaded and saved to disk');
+                } catch (error) {
+                    console.error(`Error downloading CID ${doc.ipfsCID}:`, error);
                 }
-                const content = Buffer.concat(chunks);
-                fs.writeFileSync(`./downloads/${doc.ipfsCID}.txt`, content);
-                console.log('File downloaded and saved to disk');
             }
         });
     } catch (err) {

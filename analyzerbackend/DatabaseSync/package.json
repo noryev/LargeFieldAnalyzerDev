@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "dotenv": "^16.3.1",
+    "helia": "^2.0.3",
     "ipfs-http-client": "^60.0.1",
     "mongodb": "^6.2.0"
   }
