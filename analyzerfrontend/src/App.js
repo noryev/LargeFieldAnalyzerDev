@@ -5,26 +5,29 @@ function App() {
   const [ipfsCID, setIpfsCID] = useState('');
 
   const handleUpload = async () => {
-    if (!ipfsCID.trim()) return alert('Please enter an IPFS CID.');
+    if (!ipfsCID) {
+      alert('Please enter an IPFS CID.');
+      return;
+    }
 
     try {
-      const response = await fetch('https://divide-perennial-vqus8gw.dappling.network/your-worker-route', {
+      const response = await fetch('https://large-field-analyzer.deanlaughing.workers.dev/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ipfsCID }),
-        mode: 'cors'
+        mode: 'cors',
       });
 
-      const responseText = await response.text();
+      const responseData = await response.json();
 
       if (response.ok) {
         alert('IPFS CID submitted successfully!');
-        console.log('Server Response:', responseText);
+        console.log('Server Response:', responseData);
       } else {
-        console.error("Server Response:", responseText);
-        alert(`Failed to submit IPFS CID. Reason: ${responseText || 'Unknown error'}`);
+        console.error("Server Response:", responseData);
+        alert(`Failed to submit IPFS CID. Reason: ${responseData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error("There was an error submitting the IPFS CID:", error);
@@ -35,7 +38,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h3>Submit an IPFS CID</h3>
+        <h3>Submit IPFS CID</h3>
         <div>
           <input
             type="text"
