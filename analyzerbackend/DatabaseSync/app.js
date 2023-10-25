@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { MongoClient } = require('mongodb');
 const IPFS = require('ipfs-http-client');
 
