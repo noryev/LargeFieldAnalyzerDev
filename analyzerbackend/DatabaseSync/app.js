@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
-const IPFS = require('ipfs-http-client');
+const { create } = require('ipfs-http-client');
 const fs = require('fs');
 
 async function downloadFromIPFS() {
@@ -9,7 +9,7 @@ async function downloadFromIPFS() {
     const collectionName = process.env.COLLECTION_NAME;
 
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    const ipfs = IPFS.create(); // Connecting to IPFS on the default API address http://localhost:5001
+    const ipfs = create(); // Connecting to IPFS on the default API address http://localhost:5001
 
     try {
         await client.connect();
