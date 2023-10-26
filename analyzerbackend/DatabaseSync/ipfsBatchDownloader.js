@@ -26,18 +26,26 @@ async function downloadDirectory(cid, outputDirPath) {
     console.log(`Directory for CID ${cid} downloaded and saved as a TAR archive to ${outputDirPath}`);
 }
 
-async function downloadFromCID(cid) {
+async function downloadFromCID(ipfs, cid, downloadsDir) {
     try {
-        const { type } = await ipfs.object.stat(cid);
+        const stat = await ipfs.files.stat('/ipfs/' + cid);
+        const downloadPath = path.join(downloadsDir, cid);
 
-        const outputFilePath = path.join(outputDir, cid);
+        if (stat.type === 'file') {
+            const content = await ipfs.cat(cid);
+            await fs.writeFile(downloadPath, content);
+            console.log(`File ${cid} downloaded and saved to ${downloadPath}`);
+        } else if (stat.type === 'directory') {
+            console.log(`CID ${cid} is a directory. Downloading its contents...`);
+            const files = await ipfs.ls(cid);
 
-        if (type === 'file') {
-            await downloadFile(cid, `${outputFilePath}.txt`);
-        } else if (type === 'directory') {
-            await downloadDirectory(cid, outputDir);
+            await fs.mkdir(downloadPath, { recursive: true });
+
+            for (const file of files) {
+                await downloadFromCID(ipfs, file.cid.toString(), downloadPath);
+            }
         } else {
-            console.error(`CID ${cid} is neither a file nor a directory`);
+            console.log(`CID ${cid} is neither a file nor a directory`);
         }
     } catch (error) {
         console.error(`Error downloading content for CID ${cid}:`, error);
@@ -51,12 +59,14 @@ async function processFiles() {
 
         for (const fileName of fileNames) {
             const filePath = path.join(downloadsDir, fileName);
-            const cid = await fs.readFile(filePath, 'utf8').trim();
+            const content = await fs.readFile(filePath, 'utf8');
+            const cid = content.trim();
             await downloadFromCID(cid);
         }
     } catch (error) {
         console.error('Error processing files:', error);
     }
 }
+
 
 processFiles();
