@@ -1,48 +1,32 @@
 import { create } from 'ipfs-http-client';
 import fs from 'fs-extra';
 import path from 'path';
-import stream from 'stream';
-import { promisify } from 'util';
 
-const pipeline = promisify(stream.pipeline);
+const ipfs = create({ url: '/ip4/127.0.0.1/tcp/5001' }); // Adjust the IPFS API address if necessary
+const downloadsDir = path.resolve('./downloads'); // Ensure this is the correct path
+const outputDir = path.resolve('./output'); // Path to save the downloaded content
 
-const ipfs = create('/ip4/127.0.0.1/tcp/5001'); // Adjust the IPFS API address if necessary
-const downloadsDir = './DatabaseSync/downloads';
-const outputDir = './output';
-
-async function downloadFile(cid, outputFilePath) {
-    const chunks = [];
-    for await (const chunk of ipfs.cat(cid)) {
-        chunks.push(chunk);
-    }
-    const content = Buffer.concat(chunks);
-    await fs.writeFile(outputFilePath, content);
-    console.log(`File for CID ${cid} downloaded and saved to ${outputFilePath}`);
-}
-
-async function downloadDirectory(cid, outputDirPath) {
-    const response = ipfs.get(cid);
-    await pipeline(response, fs.createWriteStream(path.join(outputDirPath, `${cid}.tar`)));
-    console.log(`Directory for CID ${cid} downloaded and saved as a TAR archive to ${outputDirPath}`);
-}
-
-async function downloadFromCID(ipfs, cid, downloadsDir) {
+async function downloadFromCID(ipfs, cid, outputDirPath) {
     try {
         const stat = await ipfs.files.stat('/ipfs/' + cid);
-        const downloadPath = path.join(downloadsDir, cid);
 
         if (stat.type === 'file') {
-            const content = await ipfs.cat(cid);
-            await fs.writeFile(downloadPath, content);
-            console.log(`File ${cid} downloaded and saved to ${downloadPath}`);
+            const content = [];
+
+            for await (const chunk of ipfs.cat(cid)) {
+                content.push(chunk);
+            }
+
+            const filePath = path.join(outputDirPath, cid);
+            await fs.outputFile(filePath, Buffer.concat(content));
+            console.log(`File ${cid} downloaded and saved to ${filePath}`);
         } else if (stat.type === 'directory') {
             console.log(`CID ${cid} is a directory. Downloading its contents...`);
-            const files = await ipfs.ls(cid);
+            const response = await ipfs.ls(cid);
+            console.log('Response from ipfs.ls:', response);
 
-            await fs.mkdir(downloadPath, { recursive: true });
-
-            for (const file of files) {
-                await downloadFromCID(ipfs, file.cid.toString(), downloadPath);
+            for await (const file of response) {
+                await downloadFromCID(ipfs, file.cid.toString(), path.join(outputDirPath, file.name));
             }
         } else {
             console.log(`CID ${cid} is neither a file nor a directory`);
@@ -52,19 +36,28 @@ async function downloadFromCID(ipfs, cid, downloadsDir) {
     }
 }
 
-async function processFiles(ipfs, cidsFile, downloadsDir) {
+async function processFiles(ipfs, downloadsDir, outputDir) {
     try {
-        const data = await fs.readFile(cidsFile, 'utf8');
-        const cids = data.split('\n').map(line => line.trim()).filter(Boolean);
+        const files = await fs.readdir(downloadsDir);
+        const txtFiles = files.filter(file => path.extname(file) === '.txt');
 
-        console.log('CIDs to download:', cids); // Add this line to log the CIDs
+        for (const txtFile of txtFiles) {
+            const data = await fs.readFile(path.join(downloadsDir, txtFile), 'utf8');
+            const cids = data.split('\n').map(line => line.trim()).filter(Boolean);
 
-        for (const cid of cids) {
-            await downloadFromCID(ipfs, cid, downloadsDir);
+            console.log('CIDs to download from', txtFile, ':', cids); // Log the CIDs
+
+            for (const cid of cids) {
+                await downloadFromCID(ipfs, cid, outputDir);
+            }
         }
     } catch (error) {
         console.error('Error processing files:', error);
     }
 }
 
-processFiles();
+// Ensure output directory exists
+await fs.ensureDir(outputDir);
+
+// Call the processFiles function with the correct arguments
+processFiles(ipfs, downloadsDir, outputDir);
