@@ -9,7 +9,7 @@ dotenv.config();
 const uri = process.env.MONGO_URI;
 const dbName = process.env.DB_NAME;
 const collectionName = process.env.COLLECTION_NAME;
-const downloadsDir = './downloads';
+const downloadsDir = './analyzerbackend/DatabaseSync/downloads';
 
 if (!uri || !dbName || !collectionName) {
     console.error('One or more required environment variables are not set');

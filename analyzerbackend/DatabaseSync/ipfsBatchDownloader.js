@@ -7,7 +7,7 @@ import { promisify } from 'util';
 const pipeline = promisify(stream.pipeline);
 
 const ipfs = create('/ip4/127.0.0.1/tcp/5001'); // Adjust the IPFS API address if necessary
-const downloadsDir = './downloads';
+const downloadsDir = './DatabaseSync/downloads';
 const outputDir = './output';
 
 async function downloadFile(cid, outputFilePath) {
@@ -52,21 +52,19 @@ async function downloadFromCID(ipfs, cid, downloadsDir) {
     }
 }
 
-async function processFiles() {
+async function processFiles(ipfs, cidsFile, downloadsDir) {
     try {
-        await fs.ensureDir(outputDir);
-        const fileNames = await fs.readdir(downloadsDir);
+        const data = await fs.readFile(cidsFile, 'utf8');
+        const cids = data.split('\n').map(line => line.trim()).filter(Boolean);
 
-        for (const fileName of fileNames) {
-            const filePath = path.join(downloadsDir, fileName);
-            const content = await fs.readFile(filePath, 'utf8');
-            const cid = content.trim();
-            await downloadFromCID(cid);
+        console.log('CIDs to download:', cids); // Add this line to log the CIDs
+
+        for (const cid of cids) {
+            await downloadFromCID(ipfs, cid, downloadsDir);
         }
     } catch (error) {
         console.error('Error processing files:', error);
     }
 }
-
 
 processFiles();
