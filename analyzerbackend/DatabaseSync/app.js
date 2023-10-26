@@ -16,6 +16,16 @@ if (!uri || !dbName || !collectionName) {
     process.exit(1);
 }
 
+async function downloadFile(ipfs, cid, downloadPath) {
+    try {
+        const content = await ipfs.cat(cid);
+        await fs.writeFile(downloadPath, content);
+        console.log(`File downloaded and saved to ${downloadPath}`);
+    } catch (error) {
+        console.error(`Error downloading file with CID ${cid}:`, error);
+    }
+}
+
 async function downloadFromIPFS() {
     const client = new MongoClient(uri);
     const ipfs = create('/ip4/127.0.0.1/tcp/5001'); // Adjust the IPFS API address if necessary
@@ -34,13 +44,16 @@ async function downloadFromIPFS() {
         for await (const doc of cursor) {
             if (doc.ipfsCID) {
                 console.log(`Downloading content for CID: ${doc.ipfsCID}`);
+                const downloadPath = path.join(downloadsDir, doc.ipfsCID);
                 try {
-                    const content = await ipfs.cat(doc.ipfsCID);
-                    const filePath = path.join(downloadsDir, `${doc.ipfsCID}.txt`);
-                    await fs.writeFile(filePath, content);
-                    console.log(`File downloaded and saved to ${filePath}`);
+                    await downloadFile(ipfs, doc.ipfsCID, `${downloadPath}.txt`);
                 } catch (error) {
-                    console.error(`Error downloading CID ${doc.ipfsCID}:`, error);
+                    if (error.message.includes('this dag node is a directory')) {
+                        console.log('CID refers to a directory, skipping...');
+                        // If you want to handle directories differently, you can do so here
+                    } else {
+                        console.error(`Error downloading CID ${doc.ipfsCID}:`, error);
+                    }
                 }
             }
         }
