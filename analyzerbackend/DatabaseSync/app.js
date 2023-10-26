@@ -6,13 +6,18 @@ import path from 'path';
 
 dotenv.config();
 
-async function downloadFromIPFS() {
-    const uri = process.env.MONGO_URI;
-    const dbName = process.env.DB_NAME;
-    const collectionName = process.env.COLLECTION_NAME;
-    const downloadsDir = './downloads';
+const uri = process.env.MONGO_URI;
+const dbName = process.env.DB_NAME;
+const collectionName = process.env.COLLECTION_NAME;
+const downloadsDir = './downloads';
 
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+if (!uri || !dbName || !collectionName) {
+    console.error('One or more required environment variables are not set');
+    process.exit(1);
+}
+
+async function downloadFromIPFS() {
+    const client = new MongoClient(uri);
     const ipfs = create('/ip4/127.0.0.1/tcp/5001'); // Adjust the IPFS API address if necessary
 
     try {
