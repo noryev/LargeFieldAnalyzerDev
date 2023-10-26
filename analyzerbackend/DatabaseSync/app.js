@@ -18,8 +18,11 @@ if (!uri || !dbName || !collectionName) {
 
 async function downloadFile(ipfs, cid, downloadPath) {
     try {
-        const content = await ipfs.cat(cid);
-        await fs.writeFile(downloadPath, content);
+        const content = [];
+        for await (const chunk of ipfs.cat(cid)) {
+            content.push(chunk);
+        }
+        await fs.writeFile(downloadPath, Buffer.concat(content));
         console.log(`File downloaded and saved to ${downloadPath}`);
     } catch (error) {
         console.error(`Error downloading file with CID ${cid}:`, error);
@@ -44,17 +47,8 @@ async function downloadFromIPFS() {
         for await (const doc of cursor) {
             if (doc.ipfsCID) {
                 console.log(`Downloading content for CID: ${doc.ipfsCID}`);
-                const downloadPath = path.join(downloadsDir, doc.ipfsCID);
-                try {
-                    await downloadFile(ipfs, doc.ipfsCID, `${downloadPath}.txt`);
-                } catch (error) {
-                    if (error.message.includes('this dag node is a directory')) {
-                        console.log('CID refers to a directory, skipping...');
-                        // If you want to handle directories differently, you can do so here
-                    } else {
-                        console.error(`Error downloading CID ${doc.ipfsCID}:`, error);
-                    }
-                }
+                const downloadPath = path.join(downloadsDir, `${doc.ipfsCID}.txt`);
+                await downloadFile(ipfs, doc.ipfsCID, downloadPath);
             }
         }
     } catch (err) {
