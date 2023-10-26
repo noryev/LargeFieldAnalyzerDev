@@ -1,8 +1,10 @@
-require('dotenv').config();
-const { MongoClient } = require('mongodb');
-const { create } = require('ipfs-http-client'); // Updated import
-const fs = require('fs').promises; // Updated import
-const path = require('path');
+import dotenv from 'dotenv';
+import { MongoClient } from 'mongodb';
+import { create } from 'ipfs-http-client';
+import { promises as fs } from 'fs';
+import path from 'path';
+
+dotenv.config();
 
 async function downloadFromIPFS() {
     const uri = process.env.MONGO_URI;
