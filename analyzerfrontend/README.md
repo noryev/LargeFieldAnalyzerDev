@@ -1,4 +1,5 @@
 # Getting Started with Create React App
+![LetoAnalyzerUserInterface3](https://github.com/noryev/LargeFieldDataAnalyzer/assets/30084404/36d4dab4-8258-447b-bd3a-4591160458d6)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
