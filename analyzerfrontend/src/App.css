@@ -18,7 +18,7 @@ button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   cursor: pointer;
-  background-color: #61dafb;
+  background-color: #1F284B;
   border: none;
   border-radius: 4px;
   color: white;
@@ -26,14 +26,14 @@ button {
 }
 
 button:hover {
-  background-color: #4fa8d5;
+  background-color: #1F284B;
 }
 
 .link-button {
   background: none;
   border: none;
   padding: 0;
-  color: #069;
+  color: #1D2025;
   text-decoration: underline;
   cursor: pointer;
   font-size: 1em;
@@ -42,6 +42,101 @@ button:hover {
 
 .link-button:hover,
 .link-button:focus {
-  color: #eb5424;
+  color: #1D2025;
   text-decoration: none;
 }
+/* General styling */
+body {
+  background-color: #282c34;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Footer styling */
+.footer {
+  background-color: #1c2024;
+  padding: 20px 0;
+  color: #aaa;
+}
+
+.footer-info {
+  margin-bottom: 20px;
+}
+
+.footer-info .logo span {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.footer-links,
+.footer-contact {
+  margin-bottom: 20px;
+}
+
+.footer-links ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 10px;
+}
+
+.footer-links ul li a,
+.footer-links ul li button.link-button {
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover,
+.footer-links ul li button.link-button:hover {
+  color: #fff;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #aaa;
+  padding: 0;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.footer-contact p {
+  margin-bottom: 10px;
+}
+
+.social-links a {
+  display: inline-block;
+  margin-right: 20px;
+  font-size: 24px;
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: #fff;
+}
+
+.social-links a.twitter {
+  color: #1DA1F2;
+}
+
+/* End of footer styling */
+
+/* Main content styling */
+h1.text-white {
+  margin-bottom: 20px;
+}
+
