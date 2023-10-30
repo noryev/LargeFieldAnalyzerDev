@@ -28,3 +28,20 @@ button {
 button:hover {
   background-color: #4fa8d5;
 }
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #069;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 1em;
+  font-family: inherit;
+}
+
+.link-button:hover,
+.link-button:focus {
+  color: #eb5424;
+  text-decoration: none;
+}
