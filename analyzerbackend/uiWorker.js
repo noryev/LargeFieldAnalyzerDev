@@ -9,9 +9,26 @@ async function handleRequest(request) {
     if (request.method === 'OPTIONS') {
       return handleCORS(request, originHeader);
     } else if (request.method === 'POST') {
+      // Get the JWT from the Authorization header
+      const token = request.headers.get('Authorization');
+      if (!token) {
+        return new Response(JSON.stringify({ error: 'Authorization token not provided.' }), {
+          status: 401,
+          headers: { 'Access-Control-Allow-Origin': originHeader, 'Content-Type': 'application/json' }
+        });
+      }
+
+      // Verify the JWT and extract user identifier
+      const userIdentifier = await verifyAndExtractUserId(token);
+      if (!userIdentifier) {
+        return new Response(JSON.stringify({ error: 'Invalid token.' }), {
+          status: 403,
+          headers: { 'Access-Control-Allow-Origin': originHeader, 'Content-Type': 'application/json' }
+        });
+      }
+
       const requestData = await request.json();
       const ipfsCID = requestData.ipfsCID;
-
       if (!ipfsCID) {
         return new Response(JSON.stringify({ error: 'IPFS hash not provided.' }), {
           status: 400,
@@ -21,14 +38,15 @@ async function handleRequest(request) {
 
       // Accessing the secrets
       const dataApiUrl = `https://us-east-2.aws.data.mongodb-api.com/app/data-uucwm/endpoint/data/v1`;
-      const clusterName = DATA_SOURCE_NAME;
-      const databaseName = DATABASE_NAME;
-      const collectionName = COLLECTION_NAME;
-      const dataApiKey = API_KEY;
+      const clusterName = DATA_SOURCE_NAME; // Replace with your actual data source name
+      const databaseName = DATABASE_NAME;   // Replace with your actual database name
+      const collectionName = COLLECTION_NAME; // Replace with your actual collection name
+      const dataApiKey = API_KEY; // Replace with your actual API key
 
       const documentToInsert = {
+        userId: userIdentifier, // Include the user's identifier
         ipfsCID: ipfsCID,
-        // ... any other fields you want to insert ...
+        // ...any other fields you want to insert...
       };
 
       const responseFromMongoDB = await fetch(`${dataApiUrl}/action/insertOne`, {
@@ -55,12 +73,10 @@ async function handleRequest(request) {
         });
       }
 
-      // If you reach this point, the document has been successfully inserted
-      return new Response(JSON.stringify({ message: 'IPFS CID and other data saved successfully!' }), {
+      return new Response(JSON.stringify({ message: 'Document uploaded and saved successfully!' }), {
         status: 200,
         headers: { 'Access-Control-Allow-Origin': originHeader, 'Content-Type': 'application/json' }
       });
-
     } else {
       return new Response(JSON.stringify({ error: 'Please send a POST request.' }), {
         status: 400,
@@ -93,4 +109,12 @@ function handleCORS(request, origin) {
   } else {
     return new Response(JSON.stringify({ error: 'CORS header check failed' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
+}
+
+// Placeholder function for JWT verification and user identifier extraction
+async function verifyAndExtractUserId(token) {
+  // Placeholder: Implement JWT verification and extract the user identifier.
+  // This example assumes the token is the user ID, which is not secure.
+  // You need to replace this with actual JWT verification logic.
+  return token;
 }
