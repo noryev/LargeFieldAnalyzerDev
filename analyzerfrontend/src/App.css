@@ -1,0 +1,124 @@
+/* Importing Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+/* General Reset and Typography */
+body, input, button {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* App Container */
+.App {
+  text-align: center;
+  background-color: #f5f5f5; /* Light grey background */
+  color: #333; /* Dark grey text */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Changed from center to start */
+}
+
+/* Header Styles */
+.App-header {
+  background-color: #282c34; /* Dark header background */
+  padding: 20px;
+  color: white;
+}
+
+/* Central Container for Content */
+.container {
+  max-width: 600px;
+  margin: 40px auto; /* Increased top and bottom margin */
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Increased shadow for depth */
+}
+
+/* Welcome Message */
+.welcome {
+  margin-bottom: 30px; /* Increased spacing */
+  font-weight: 600; /* Make the font a bit bolder */
+}
+
+/* Input Group Styling */
+.input-group {
+  display: flex; /* Use flex to align input and button */
+  margin-bottom: 20px;
+}
+
+.input-cid {
+  flex-grow: 1; /* Input takes available space */
+  padding: 12px;
+  margin-right: 10px; /* Space between input and button */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Button Styles */
+.btn {
+  padding: 12px 20px; /* Increased padding for better touch */
+  background-color: #007bff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, transform 0.1s; /* Added transform to transition for a pop effect */
+}
+
+.btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05); /* Button pops a bit */
+}
+
+/* Sign Out Button Specific Style */
+.btn.sign-out {
+  background-color: #dc3545;
+  margin-top: 30px; /* Increased space from the list */
+}
+
+/* CID List Styles */
+.cid-list ul {
+  list-style: none;
+  padding-left: 0;
+  max-height: 200px; /* Set max height for scrollable list */
+  overflow-y: auto; /* Make list scrollable */
+}
+
+.cid-list li {
+  background: #f8f9fa;
+  padding: 12px;
+  margin-bottom: 8px; /* Reduced space between items */
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  text-align: left; /* Align text to the left */
+}
+
+/* Footer Styles */
+.App-footer {
+  margin-top: auto;
+  background-color: #282c34;
+  color: white;
+  padding: 20px;
+  text-align: center; /* Center align the footer content */
+}
+
+/* Responsive Media Query */
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Remove duplicate and conflicting styles below this line */
