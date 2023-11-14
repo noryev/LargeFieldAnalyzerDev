@@ -1,5 +1,4 @@
-#![Screenshot from 2023-11-13 19-55-59](https://github.com/noryev/LargeFieldDataAnalyzer/assets/30084404/a5c5c02f-1afe-4![Screenshot from 2023-11-13 19-56-40](https://github.com/noryev/LargeFieldDataAnalyzer/assets/30084404/6ea8eb39-91e3-44c2-92b8-0a4d503b1f42)
-c4c-9695-dbf5a3746ca8)
+
  Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
