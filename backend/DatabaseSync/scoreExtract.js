@@ -59,3 +59,5 @@ async function extractDataFromAllAnalyses() {
 
 // Execute the function
 extractDataFromAllAnalyses();
+
+// {"_id":{"$oid":"65575f834330ca3846f6e052"},"userId":"2569e3f3-61a1-4966-b04f-1c90797e92c3","ipfsCID":"bafybeidcn7tocj6eicf5jeauasmmzkdykbzfdw7fs5kgc5osfpx3zlfokm"}
