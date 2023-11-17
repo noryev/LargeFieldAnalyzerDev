@@ -3,9 +3,16 @@ import requests
 import time
 from pymongo import MongoClient
 
-client = MongoClient('your-atlas-connection-string')  # Replace with your Atlas connection string
-db = client.your_database_name  # Replace with your database name
-collection = db.your_collection_name  # Replace with your collection name
+# Get values from environment variables
+mongo_uri = os.getenv('MONGO_URI')
+db_name = os.getenv('DB_NAME')
+collection_name = os.getenv('COLLECTION_NAME')
+
+# Set up MongoDB connection
+client = MongoClient(mongo_uri)
+db = client[db_name]
+collection = db[collection_name]
+
 
 def submit_to_cuckoo(file_path):
     url = 'http://localhost:8090/tasks/create/file'  # Cuckoo API endpoint
