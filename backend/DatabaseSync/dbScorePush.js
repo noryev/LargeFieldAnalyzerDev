@@ -9,43 +9,60 @@ dotenv.config();
 const uri = process.env.MONGO_URI;
 const dbName = process.env.DB_NAME;
 const collectionName = process.env.COLLECTION_NAME;
+const baseDir = path.join(process.env.HOME, '.cuckoo/storage/analyses');
 
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(uri);
 
-// Update this path to the correct location of your reports directory
-const reportsDirectory = path.join(process.env.HOME, '.cuckoo/storage/reports');
-
-async function updateDatabaseWithScore() {
-  try {
-    await client.connect();
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
-
-    // Read all files in the reports directory
-    const files = fs.readdirSync(reportsDirectory);
-
-    for (const file of files) {
-      if (file.endsWith('.json')) {
-        const filePath = path.join(reportsDirectory, file);
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-
-        // Assuming the file name is the ObjectId and the score is a property in the JSON
-        const objectId = file.replace('.json', '');
-        const score = data.score; // Replace with actual path to score in your JSON structure
-
-        const result = await collection.updateOne(
-          { _id: ObjectId(objectId) },
-          { $set: { score: score } }
-        );
-
-        console.log(`Updated document with id ${objectId}:`, result);
-      }
+// Function to read JSON and extract specified property
+async function extractProperty(directory, fileName, propertyPath) {
+    const filePath = path.join(directory, fileName);
+    try {
+        const data = await fs.promises.readFile(filePath, 'utf8');
+        const json = JSON.parse(data);
+        let property = json;
+        for (const key of propertyPath) {
+            property = property[key];
+            if (property === undefined) {
+                return null;
+            }
+        }
+        return property;
+    } catch (err) {
+        console.error(`Error in ${path.basename(directory)}:`, err.message);
+        return null;
     }
-  } catch (error) {
-    console.error('Error updating database:', error);
-  } finally {
-    await client.close();
-  }
 }
 
-updateDatabaseWithScore();
+// Function to iterate over analysis directories and update database
+async function extractDataAndUpdateDatabase() {
+    try {
+        await client.connect();
+        const database = client.db(dbName);
+        const collection = database.collection(collectionName);
+
+        const directories = await fs.promises.readdir(baseDir);
+
+        for (const dir of directories) {
+            const directoryPath = path.join(baseDir, dir);
+            const stat = await fs.promises.stat(directoryPath);
+
+            if (stat.isDirectory()) {
+                const score = await extractProperty(directoryPath, 'reports/report.json', ['info', 'score']);
+                const target = await extractProperty(directoryPath, 'task.json', ['target']);
+
+                const result = await collection.updateOne(
+                    { _id: ObjectId(dir) },
+                    { $set: { score: score, target: target } }
+                );
+
+                console.log(`Updated document with id ${dir}:`, result);
+            }
+        }
+    } catch (err) {
+        console.error('Error:', err.message);
+    } finally {
+        await client.close();
+    }
+}
+
+extractDataAndUpdateDatabase();
