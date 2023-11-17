@@ -10,22 +10,26 @@ load_dotenv()
 mongo_uri = os.getenv('MONGO_URI')
 db_name = os.getenv('DB_NAME')
 collection_name = os.getenv('COLLECTION_NAME')
+api_token = os.getenv('CUCKOO_API_TOKEN')  # Retrieve the Cuckoo API token from environment variable
 
-# Check if db_name and collection_name are strings
-if not isinstance(db_name, basestring) or not isinstance(collection_name, basestring):
-    raise ValueError("DB_NAME and COLLECTION_NAME must be strings")
+# Check if db_name, collection_name, and api_token are strings
+if not isinstance(db_name, basestring) or not isinstance(collection_name, basestring) or not isinstance(api_token, basestring):
+    raise ValueError("DB_NAME, COLLECTION_NAME, and CUCKOO_API_TOKEN must be strings")
 
 # Set up MongoDB connection
 client = MongoClient(mongo_uri)
 db = client[db_name]
 collection = db[collection_name]
 
+# Headers for Cuckoo API requests
+headers = {'Authorization': 'Bearer ' + api_token}
+
 def submit_to_cuckoo(file_path):
     url = 'http://localhost:8090/tasks/create/file'  # Cuckoo API endpoint
     with open(file_path, 'rb') as file:
         files = {'file': (os.path.basename(file_path), file)}
         try:
-            r = requests.post(url, files=files)
+            r = requests.post(url, files=files, headers=headers)
             r.raise_for_status()  # Raise an error for bad status codes
             return r.json().get('task_id')
         except requests.RequestException as e:
@@ -37,7 +41,7 @@ def get_cuckoo_report(task_id):
         return None
     report_url = 'http://localhost:8090/tasks/report/{}'.format(task_id)
     try:
-        report = requests.get(report_url).json()
+        report = requests.get(report_url, headers=headers).json()
         return report  # Returns the entire report
     except requests.RequestException as e:
         print("Error fetching report from Cuckoo: {}".format(e))
