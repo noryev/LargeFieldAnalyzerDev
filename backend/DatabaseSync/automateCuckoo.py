@@ -8,11 +8,14 @@ mongo_uri = os.getenv('MONGO_URI')
 db_name = os.getenv('DB_NAME')
 collection_name = os.getenv('COLLECTION_NAME')
 
+# Check if db_name and collection_name are strings
+if not isinstance(db_name, basestring) or not isinstance(collection_name, basestring):
+    raise ValueError("DB_NAME and COLLECTION_NAME must be strings")
+
 # Set up MongoDB connection
 client = MongoClient(mongo_uri)
 db = client[db_name]
 collection = db[collection_name]
-
 
 def submit_to_cuckoo(file_path):
     url = 'http://localhost:8090/tasks/create/file'  # Cuckoo API endpoint
@@ -22,7 +25,7 @@ def submit_to_cuckoo(file_path):
         return r.json()['task_id']  # Returns the task ID for the submission
 
 def get_cuckoo_report(task_id):
-    report_url = f'http://localhost:8090/tasks/report/{task_id}'
+    report_url = 'http://localhost:8090/tasks/report/{}'.format(task_id)
     report = requests.get(report_url).json()
     return report  # Returns the entire report
 
@@ -32,6 +35,7 @@ def update_mongo(file_path, score):
         {'$set': {'cuckoo_score': score}},
         upsert=True
     )
+
 def process_folder(folder_path):
     for file in os.listdir(folder_path):
         file_path = os.path.join(folder_path, file)
