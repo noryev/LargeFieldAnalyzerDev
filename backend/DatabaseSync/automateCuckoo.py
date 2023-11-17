@@ -42,4 +42,4 @@ def process_folder(folder_path):
             score = report.get('info', {}).get('score', 0)
             update_mongo(file_path, score)
 
-process_folder('/path/to/your/folder')  # Replace with your folder path
+process_folder('/home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/output')  # Replace with your folder path
