@@ -46,12 +46,12 @@ async function extractDataAndUpdateDatabase() {
             const directoryPath = path.join(baseDir, dir);
             const stat = await fs.promises.stat(directoryPath);
 
-            if (stat.isDirectory()) {
+            if (stat.isDirectory() && /^[0-9a-fA-F]{24}$/.test(dir)) {
                 const score = await extractProperty(directoryPath, 'reports/report.json', ['info', 'score']);
                 const target = await extractProperty(directoryPath, 'task.json', ['target']);
 
                 const result = await collection.updateOne(
-                    { _id: ObjectId(dir) },
+                    { _id: new ObjectId(dir) },
                     { $set: { score: score, target: target } }
                 );
 
