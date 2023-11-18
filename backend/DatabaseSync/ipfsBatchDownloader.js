@@ -2,13 +2,23 @@ import { create } from 'ipfs-http-client';
 import fs from 'fs-extra';
 import path from 'path';
 
-const ipfs = create({ url: '/ip4/127.0.0.1/tcp/5001' });
+// Initialize IPFS client
+const ipfs = create({ url: 'http://127.0.0.1:5001' });
 const downloadsDir = path.resolve('./downloads');
-const outputDir = path.resolve('./output');
 
-async function downloadFromCID(ipfs, cid, outputDirPath) {
+/**
+ * Download content from a given CID and save it to a specified path within a subfolder.
+ */
+async function downloadFromCID(ipfs, cid, downloadsDirPath, originalFileName) {
     try {
         const stat = await ipfs.files.stat('/ipfs/' + cid);
+
+        // Create a subfolder within the downloads directory for each CID
+        const cidDirPath = path.join(downloadsDirPath, cid);
+        await fs.ensureDir(cidDirPath);
+
+        const fileName = originalFileName.replace('.txt', '') || 'downloaded_content';
+        const filePath = path.join(cidDirPath, fileName);
 
         if (stat.type === 'file') {
             const content = [];
@@ -17,7 +27,6 @@ async function downloadFromCID(ipfs, cid, outputDirPath) {
                 content.push(chunk);
             }
 
-            const filePath = path.join(outputDirPath, cid);
             await fs.outputFile(filePath, Buffer.concat(content));
             console.log(`File ${cid} downloaded and saved to ${filePath}`);
         } else if (stat.type === 'directory') {
@@ -25,7 +34,7 @@ async function downloadFromCID(ipfs, cid, outputDirPath) {
             const response = await ipfs.ls(cid);
 
             for await (const file of response) {
-                await downloadFromCID(ipfs, file.cid.toString(), path.join(outputDirPath, file.name));
+                await downloadFromCID(ipfs, file.cid.toString(), cidDirPath, file.name);
             }
         } else {
             console.log(`CID ${cid} is neither a file nor a directory`);
@@ -35,35 +44,29 @@ async function downloadFromCID(ipfs, cid, outputDirPath) {
     }
 }
 
-async function processFiles(ipfs, downloadsDir, outputDir) {
+/**
+ * Process files in the downloads directory to download content from IPFS.
+ */
+async function processFiles(ipfs, downloadsDir) {
     try {
-        const folders = await fs.readdir(downloadsDir);
+        const files = await fs.readdir(downloadsDir);
+        const txtFiles = files.filter(file => path.extname(file) === '.txt');
 
-        for (const folder of folders) {
-            const folderPath = path.join(downloadsDir, folder);
-            const folderStat = await fs.stat(folderPath);
+        for (const txtFile of txtFiles) {
+            const data = await fs.readFile(path.join(downloadsDir, txtFile), 'utf8');
+            const cids = data.split('\n').map(line => line.trim()).filter(Boolean);
 
-            if (folderStat.isDirectory()) {
-                const files = await fs.readdir(folderPath);
-                const txtFiles = files.filter(file => path.extname(file) === '.txt');
-
-                for (const txtFile of txtFiles) {
-                    const data = await fs.readFile(path.join(folderPath, txtFile), 'utf8');
-                    const cids = data.split('\n').map(line => line.trim()).filter(Boolean);
-
-                    for (const cid of cids) {
-                        await downloadFromCID(ipfs, cid, outputDir);
-                    }
-                }
+            for (const cid of cids) {
+                await downloadFromCID(ipfs, cid, downloadsDir, txtFile);
             }
         }
+        console.log('All files processed successfully.');
     } catch (error) {
         console.error('Error processing files:', error);
     }
 }
 
-// Ensure output directory exists
-await fs.ensureDir(outputDir);
-
-// Call the processFiles function
-processFiles(ipfs, downloadsDir, outputDir);
+// Start processing files
+fs.ensureDir(downloadsDir)
+    .then(() => processFiles(ipfs, downloadsDir))
+    .catch(error => console.error('Error ensuring downloads directory exists:', error));
