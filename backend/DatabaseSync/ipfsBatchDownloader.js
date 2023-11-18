@@ -17,8 +17,6 @@ async function downloadFromCID(ipfs, cid, outputDirPath) {
                 content.push(chunk);
             }
 
-            // Use the CID directly as the filename
-            // Modify this line if you need to sanitize or encode the CID for use as a filename
             const filePath = path.join(outputDirPath, cid);
             await fs.outputFile(filePath, Buffer.concat(content));
             console.log(`File ${cid} downloaded and saved to ${filePath}`);
@@ -39,15 +37,24 @@ async function downloadFromCID(ipfs, cid, outputDirPath) {
 
 async function processFiles(ipfs, downloadsDir, outputDir) {
     try {
-        const files = await fs.readdir(downloadsDir);
-        const txtFiles = files.filter(file => path.extname(file) === '.txt');
+        const folders = await fs.readdir(downloadsDir);
 
-        for (const txtFile of txtFiles) {
-            const data = await fs.readFile(path.join(downloadsDir, txtFile), 'utf8');
-            const cids = data.split('\n').map(line => line.trim()).filter(Boolean);
+        for (const folder of folders) {
+            const folderPath = path.join(downloadsDir, folder);
+            const folderStat = await fs.stat(folderPath);
 
-            for (const cid of cids) {
-                await downloadFromCID(ipfs, cid, outputDir);
+            if (folderStat.isDirectory()) {
+                const files = await fs.readdir(folderPath);
+                const txtFiles = files.filter(file => path.extname(file) === '.txt');
+
+                for (const txtFile of txtFiles) {
+                    const data = await fs.readFile(path.join(folderPath, txtFile), 'utf8');
+                    const cids = data.split('\n').map(line => line.trim()).filter(Boolean);
+
+                    for (const cid of cids) {
+                        await downloadFromCID(ipfs, cid, outputDir);
+                    }
+                }
             }
         }
     } catch (error) {

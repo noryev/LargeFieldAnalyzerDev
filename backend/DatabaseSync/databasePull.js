@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 import { create } from 'ipfs-http-client';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -19,8 +19,10 @@ if (!uri || !dbName || !collectionName) {
 async function downloadFile(ipfs, objectId, cid, downloadPath) {
     try {
         const content = Buffer.from(cid); // Convert CID to a Buffer
-        await fs.writeFile(downloadPath, content);
-        console.log(`File with CID ${cid} downloaded and saved as ${objectId}.txt`);
+        await fs.mkdir(downloadPath, { recursive: true }); // Create a folder for the ObjectId
+        const filePath = path.join(downloadPath, `${objectId}.txt`); // Define the file path within the folder
+        await fs.writeFile(filePath, content);
+        console.log(`File with CID ${cid} downloaded and saved as ${filePath}`);
     } catch (error) {
         console.error(`Error downloading file with CID ${cid}:`, error);
     }
@@ -39,18 +41,12 @@ async function downloadFromIPFS() {
 
         const cursor = collection.find({});
 
-        await fs.mkdir(downloadsDir, { recursive: true });
-
         for await (const doc of cursor) {
             if (doc.ipfsCID) {
                 console.log(`Downloading content for CID: ${doc.ipfsCID}`);
                 const objectIdStr = doc._id.toString(); // Convert ObjectId to string
                 const downloadPath = path.join(downloadsDir, objectIdStr);
-                try {
-                    await downloadFile(ipfs, objectIdStr, doc.ipfsCID, `${downloadPath}.txt`);
-                } catch (error) {
-                    console.error(`Error handling CID ${doc.ipfsCID}:`, error);
-                }
+                await downloadFile(ipfs, objectIdStr, doc.ipfsCID, downloadPath);
             }
         }
     } catch (err) {
