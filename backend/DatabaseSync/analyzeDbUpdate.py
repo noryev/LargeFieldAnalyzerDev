@@ -61,19 +61,21 @@ def update_mongo(file_path, score):
         )
         print("MongoDB updated successfully.")
 
+def process_file(file_path):
+    print("Processing file: {}".format(file_path))
+    task_id = submit_to_cuckoo(file_path)
+    time.sleep(10)  # Adjust this based on expected analysis time
+    report = get_cuckoo_report(task_id)
+    if report is not None:
+        score = report.get('info', {}).get('score', 0)
+        update_mongo(file_path, score)
+
 def process_folder(folder_path):
     print("Processing folder: {}".format(folder_path))
-    for file in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, file)
-        if os.path.isfile(file_path):
-            print("Processing file: {}".format(file_path))
-            task_id = submit_to_cuckoo(file_path)
-            time.sleep(10)  # Adjust this based on expected analysis time
-            report = get_cuckoo_report(task_id)
-            if report is not None:
-                score = report.get('info', {}).get('score', 0)
-                update_mongo(file_path, score)
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            process_file(file_path)
 
-folder_path = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/output'
+folder_path = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/downloads/output'
 process_folder(folder_path)  # Replace with your folder path
-
