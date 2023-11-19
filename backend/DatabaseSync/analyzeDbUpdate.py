@@ -77,5 +77,5 @@ def process_folder(folder_path):
             file_path = os.path.join(root, file)
             process_file(file_path)
 
-folder_path = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/downloads/output'
+folder_path = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/downloads/userCIDs/output'
 process_folder(folder_path)  # Replace with your folder path
