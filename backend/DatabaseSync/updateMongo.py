@@ -10,7 +10,7 @@ print("Loading environment variables...")
 mongo_uri = os.getenv('MONGO_URI')
 db_name = os.getenv('DB_NAME')
 collection_name = os.getenv('COLLECTION_NAME')
-api_token = os.getenv('CUCKOO_API_TOKEN')  # Retrieve the Cuckoo API token from environment variable
+api_token = os.getenv('CUCKOO_API_TOKEN')
 
 print("Environment variables loaded. Connecting to MongoDB...")
 client = MongoClient(mongo_uri)
@@ -21,6 +21,7 @@ print("Connected to MongoDB.")
 headers = {'Authorization': 'Bearer ' + api_token}
 
 def submit_to_cuckoo(file_path):
+  def submit_to_cuckoo(file_path):
     print("Submitting file {} to Cuckoo...".format(file_path))
     url = 'http://localhost:8090/tasks/create/file'
     with open(file_path, 'rb') as file:
@@ -35,7 +36,6 @@ def submit_to_cuckoo(file_path):
             print("Error submitting file to Cuckoo: {}".format(e))
             return None
 
-# ... [rest of your code remains unchanged up to the get_cuckoo_report function] ...
 
 def get_cuckoo_report(task_id):
     print("Fetching report for Task ID: {}...".format(task_id))
@@ -50,12 +50,13 @@ def get_cuckoo_report(task_id):
     except requests.RequestException as e:
         print("Error fetching report from Cuckoo: {}".format(e))
         return None
+    
 
-def update_mongo(file_path, score):
-    print("Updating MongoDB for {} with score: {}".format(file_path, score))
+def update_mongo(ipfs_cid, score):
+    print("Updating MongoDB for IPFS CID: {} with score: {}".format(ipfs_cid, score))
     if score is not None:
         collection.update_one(
-            {'file_path': file_path},
+            {'ipfs_cid': ipfs_cid},
             {'$set': {'cuckoo_score': score}},
             upsert=True
         )
@@ -63,12 +64,13 @@ def update_mongo(file_path, score):
 
 def process_file(file_path):
     print("Processing file: {}".format(file_path))
+    ipfs_cid = os.path.basename(file_path)  # Assuming filename is the IPFS CID
     task_id = submit_to_cuckoo(file_path)
     time.sleep(10)  # Adjust this based on expected analysis time
     report = get_cuckoo_report(task_id)
     if report is not None:
         score = report.get('info', {}).get('score', 0)
-        update_mongo(file_path, score)
+        update_mongo(ipfs_cid, score)
 
 def process_folder(folder_path):
     print("Processing folder: {}".format(folder_path))
@@ -77,5 +79,5 @@ def process_folder(folder_path):
             file_path = os.path.join(root, file)
             process_file(file_path)
 
-folder_path = ''
-process_folder(folder_path)  # Replace with your folder path
+folder_path = 'backend/DatabaseSync/downloads/userCIDs/output'
+process_folder(folder_path)  
