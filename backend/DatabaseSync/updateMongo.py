@@ -21,7 +21,6 @@ print("Connected to MongoDB.")
 headers = {'Authorization': 'Bearer ' + api_token}
 
 def submit_to_cuckoo(file_path):
-  def submit_to_cuckoo(file_path):
     print("Submitting file {} to Cuckoo...".format(file_path))
     url = 'http://localhost:8090/tasks/create/file'
     with open(file_path, 'rb') as file:
@@ -64,14 +63,15 @@ def update_mongo(ipfs_cid, score):
 
 def process_file(file_path):
     print("Processing file: {}".format(file_path))
-    ipfs_cid = os.path.basename(file_path)  # Assuming filename is the IPFS CID
+    # Extract the parent folder name (assumed to be the IPFS CID)
+    ipfs_cid = os.path.basename(os.path.dirname(file_path))
     task_id = submit_to_cuckoo(file_path)
     time.sleep(10)  # Adjust this based on expected analysis time
     report = get_cuckoo_report(task_id)
     if report is not None:
         score = report.get('info', {}).get('score', 0)
         update_mongo(ipfs_cid, score)
-
+        
 def process_folder(folder_path):
     print("Processing folder: {}".format(folder_path))
     for root, dirs, files in os.walk(folder_path):
@@ -79,5 +79,5 @@ def process_folder(folder_path):
             file_path = os.path.join(root, file)
             process_file(file_path)
 
-folder_path = 'backend/DatabaseSync/downloads/userCIDs/output'
+folder_path = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/downloads/userCIDs/output'
 process_folder(folder_path)  
