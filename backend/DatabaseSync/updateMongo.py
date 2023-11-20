@@ -43,12 +43,16 @@ def get_cuckoo_report(task_id):
         return None
     report_url = 'http://localhost:8090/tasks/report/{}'.format(task_id)
     try:
-        report = requests.get(report_url, headers=headers).json()
+        response = requests.get(report_url, headers=headers)
+        response.raise_for_status()
+        report = response.json()
         print("Report fetched successfully.")
+        print("Full report:", report)  # Debug: print the entire report
         return report
     except requests.RequestException as e:
         print("Error fetching report from Cuckoo: {}".format(e))
         return None
+
     
 
 def update_mongo(ipfs_cid, score):
