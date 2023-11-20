@@ -53,13 +53,12 @@ def get_cuckoo_report(task_id):
         print("Error fetching report from Cuckoo: {}".format(e))
         return None
 
-    
 
 def update_mongo(ipfs_cid, score):
     print("Updating MongoDB for IPFS CID: {} with score: {}".format(ipfs_cid, score))
     if score is not None:
         collection.update_one(
-            {'ipfs_cid': ipfs_cid},
+            {'ipfsCID': ipfs_cid},  # Changed from 'ipfs_cid' to 'ipfsCID'
             {'$set': {'cuckoo_score': score}},
             upsert=True
         )
@@ -67,13 +66,17 @@ def update_mongo(ipfs_cid, score):
 
 def process_file(file_path, base_folder):
     print("Processing file: {}".format(file_path))
+    
     # Extract the part of the file path relative to the base folder
     relative_path = os.path.relpath(file_path, base_folder)
-    # The first part of the relative path is the outermost folder name
-    outermost_folder = relative_path.split(os.sep)[0]
-    ipfs_cid = outermost_folder
+    
+    # The first part of the relative path is the outermost folder name,
+    # which is assumed to be the ipfsCID
+    ipfs_cid = relative_path.split(os.sep)[0]
+    print("Extracted IPFS CID: {} from path {}".format(ipfs_cid, file_path))
     task_id = submit_to_cuckoo(file_path)
-    time.sleep(10)  # Adjust this based on expected analysis time
+    time.sleep(120)  # Adjust this based on expected analysis time
+
     report = get_cuckoo_report(task_id)
     if report is not None:
         score = report.get('info', {}).get('score', 0)
