@@ -61,23 +61,26 @@ def update_mongo(ipfs_cid, score):
         )
         print("MongoDB updated successfully.")
 
-def process_file(file_path):
+def process_file(file_path, base_folder):
     print("Processing file: {}".format(file_path))
-    # Extract the parent folder name (assumed to be the IPFS CID)
-    ipfs_cid = os.path.basename(os.path.dirname(file_path))
+    # Extract the part of the file path relative to the base folder
+    relative_path = os.path.relpath(file_path, base_folder)
+    # The first part of the relative path is the outermost folder name
+    outermost_folder = relative_path.split(os.sep)[0]
+    ipfs_cid = outermost_folder
     task_id = submit_to_cuckoo(file_path)
     time.sleep(10)  # Adjust this based on expected analysis time
     report = get_cuckoo_report(task_id)
     if report is not None:
         score = report.get('info', {}).get('score', 0)
         update_mongo(ipfs_cid, score)
-        
+
 def process_folder(folder_path):
     print("Processing folder: {}".format(folder_path))
     for root, dirs, files in os.walk(folder_path):
         for file in files:
             file_path = os.path.join(root, file)
-            process_file(file_path)
+            process_file(file_path, folder_path)
 
 folder_path = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/downloads/userCIDs/output'
-process_folder(folder_path)  
+process_folder(folder_path)
