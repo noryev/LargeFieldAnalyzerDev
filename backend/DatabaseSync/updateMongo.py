@@ -75,7 +75,7 @@ def process_file(file_path, base_folder):
     ipfs_cid = relative_path.split(os.sep)[0]
     print("Extracted IPFS CID: {} from path {}".format(ipfs_cid, file_path))
     task_id = submit_to_cuckoo(file_path)
-    time.sleep(120)  # Adjust this based on expected analysis time
+    time.sleep(180)  # Adjust this based on expected analysis time
 
     report = get_cuckoo_report(task_id)
     if report is not None:
