@@ -40,7 +40,8 @@ async function downloadFromIPFS() {
 
         await fs.mkdir(userCIDsDir, { recursive: true }); // Ensure the 'userCIDs' directory exists
 
-        const cursor = collection.find({});
+        // Update the query to only select documents without a cuckoo_score
+        const cursor = collection.find({ cuckoo_score: { $exists: false } });
 
         for await (const doc of cursor) {
             if (doc.ipfsCID) {
