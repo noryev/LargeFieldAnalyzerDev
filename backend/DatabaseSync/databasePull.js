@@ -63,3 +63,5 @@ async function downloadFromIPFS() {
 }
 
 downloadFromIPFS();
+
+// Maybe write some code that only retrieves the IPFSCIDs from Atlas that do not have a score- 
