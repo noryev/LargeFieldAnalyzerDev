@@ -2,13 +2,24 @@ import { create } from 'ipfs-http-client';
 import fs from 'fs-extra';
 import path from 'path';
 
-const ipfs = create({ url: '/ip4/127.0.0.1/tcp/5001' });
-const downloadsDir = path.resolve('./downloads');
-const outputDir = path.resolve('./output');
+// Initialize IPFS client
+const ipfs = create({ url: 'http://127.0.0.1:5001' });
+const downloadsDir = path.resolve('./downloads/userCIDs');
+const outputDir = path.join(downloadsDir, 'output'); // Output directory inside downloads
 
-async function downloadFromCID(ipfs, cid, outputDirPath) {
+/**
+ * Download content from a given CID and save it to a specified path within the output subfolder.
+ */
+async function downloadFromCID(ipfs, cid, downloadsDirPath, originalFileName) {
     try {
         const stat = await ipfs.files.stat('/ipfs/' + cid);
+
+        // Create a subfolder within the output directory for each CID
+        const cidDirPath = path.join(downloadsDirPath, cid);
+        await fs.ensureDir(cidDirPath);
+
+        const fileName = originalFileName.replace('.txt', '') || 'downloaded_content';
+        const filePath = path.join(cidDirPath, fileName);
 
         if (stat.type === 'file') {
             const content = [];
@@ -17,9 +28,6 @@ async function downloadFromCID(ipfs, cid, outputDirPath) {
                 content.push(chunk);
             }
 
-            // Use the CID directly as the filename
-            // Modify this line if you need to sanitize or encode the CID for use as a filename
-            const filePath = path.join(outputDirPath, cid);
             await fs.outputFile(filePath, Buffer.concat(content));
             console.log(`File ${cid} downloaded and saved to ${filePath}`);
         } else if (stat.type === 'directory') {
@@ -27,7 +35,7 @@ async function downloadFromCID(ipfs, cid, outputDirPath) {
             const response = await ipfs.ls(cid);
 
             for await (const file of response) {
-                await downloadFromCID(ipfs, file.cid.toString(), path.join(outputDirPath, file.name));
+                await downloadFromCID(ipfs, file.cid.toString(), cidDirPath, file.name);
             }
         } else {
             console.log(`CID ${cid} is neither a file nor a directory`);
@@ -37,6 +45,9 @@ async function downloadFromCID(ipfs, cid, outputDirPath) {
     }
 }
 
+/**
+ * Process files in the downloads directory to download content from IPFS.
+ */
 async function processFiles(ipfs, downloadsDir, outputDir) {
     try {
         const files = await fs.readdir(downloadsDir);
@@ -47,16 +58,16 @@ async function processFiles(ipfs, downloadsDir, outputDir) {
             const cids = data.split('\n').map(line => line.trim()).filter(Boolean);
 
             for (const cid of cids) {
-                await downloadFromCID(ipfs, cid, outputDir);
+                await downloadFromCID(ipfs, cid, outputDir, txtFile); // Use outputDir instead
             }
         }
+        console.log('All files processed successfully.');
     } catch (error) {
         console.error('Error processing files:', error);
     }
 }
 
-// Ensure output directory exists
-await fs.ensureDir(outputDir);
-
-// Call the processFiles function
-processFiles(ipfs, downloadsDir, outputDir);
+// Ensure output directory exists and then start processing files
+fs.ensureDir(outputDir)
+    .then(() => processFiles(ipfs, downloadsDir, outputDir))
+    .catch(error => console.error('Error ensuring output directory exists:', error));

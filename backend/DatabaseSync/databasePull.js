@@ -10,6 +10,7 @@ const uri = process.env.MONGO_URI;
 const dbName = process.env.DB_NAME;
 const collectionName = process.env.COLLECTION_NAME;
 const downloadsDir = './downloads';
+const userCIDsDir = path.join(downloadsDir, 'userCIDs'); // Path for the 'userCIDs' folder
 
 if (!uri || !dbName || !collectionName) {
     console.error('One or more required environment variables are not set');
@@ -37,17 +38,17 @@ async function downloadFromIPFS() {
         const db = client.db(dbName);
         const collection = db.collection(collectionName);
 
-        const cursor = collection.find({});
+        await fs.mkdir(userCIDsDir, { recursive: true }); // Ensure the 'userCIDs' directory exists
 
-        await fs.mkdir(downloadsDir, { recursive: true });
+        const cursor = collection.find({});
 
         for await (const doc of cursor) {
             if (doc.ipfsCID) {
                 console.log(`Downloading content for CID: ${doc.ipfsCID}`);
                 const objectIdStr = doc._id.toString(); // Convert ObjectId to string
-                const downloadPath = path.join(downloadsDir, objectIdStr);
+                const downloadPath = path.join(userCIDsDir, `${objectIdStr}.txt`); // Update path to use 'userCIDsDir'
                 try {
-                    await downloadFile(ipfs, objectIdStr, doc.ipfsCID, `${downloadPath}.txt`);
+                    await downloadFile(ipfs, objectIdStr, doc.ipfsCID, downloadPath);
                 } catch (error) {
                     console.error(`Error handling CID ${doc.ipfsCID}:`, error);
                 }
