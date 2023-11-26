@@ -10,3 +10,4 @@ function runInNewTerminal(command, args) {
 
 runInNewTerminal('ipfs', ['daemon']);
 runInNewTerminal('vboxmanage', ['startvm', 'cuckoo1']);
+runInNewTerminal('cuckoo');
