@@ -1,13 +1,25 @@
 import { spawn } from 'child_process';
 
 function runInNewTerminal(command, args) {
-    const process = spawn('gnome-terminal', ['--', 'bash', '-c', `${command} ${args.join(' ')}; exec bash`]);
-
-    process.on('error', (err) => {
-        console.error(`Failed to start process: ${err.message}`);
-    });
+    spawn('gnome-terminal', ['--', 'bash', '-c', `${command} ${args.join(' ')}; exec bash`]);
 }
 
-runInNewTerminal('ipfs', ['daemon']);
-runInNewTerminal('vboxmanage', ['startvm', 'cuckoo1']);
-runInNewTerminal('cuckoo');
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function startProcesses() {
+    // Start the IPFS daemon
+    runInNewTerminal('ipfs', ['daemon']);
+
+    // Start VirtualBox VM
+    runInNewTerminal('vboxmanage', ['startvm', 'cuckoo1']);
+
+    // Wait for 45 seconds
+    await sleep(45000);
+
+    // Start Cuckoo
+    runInNewTerminal('cuckoo', []);
+}
+
+startProcesses();
