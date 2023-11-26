@@ -20,6 +20,17 @@ async function startProcesses() {
 
     // Start Cuckoo
     runInNewTerminal('cuckoo', []);
+
+    // Wait for 5 seconds
+    await sleep(5000);
+
+    // Start Cuckoo web server
+    runInNewTerminal('cuckoo', ['web', 'runserver', '0.0.0.0:8000']);
+
+    await sleep(5000);
+
+    // Start Cuckoo api (control the cuckoo analyzer)
+    runInNewTerminal('cuckoo', ['api']);
 }
 
 startProcesses();
