@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 import { create } from 'ipfs-http-client';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -9,8 +9,7 @@ dotenv.config();
 const uri = process.env.MONGO_URI;
 const dbName = process.env.DB_NAME;
 const collectionName = process.env.COLLECTION_NAME;
-const downloadsDir = './downloads';
-const userCIDsDir = path.join(downloadsDir, 'userCIDs'); // Path for the 'userCIDs' folder
+const downloadsDir = './analysisCIDs'; // Path for the 'downloads' folder
 
 if (!uri || !dbName || !collectionName) {
     console.error('One or more required environment variables are not set');
@@ -38,7 +37,7 @@ async function downloadFromIPFS() {
         const db = client.db(dbName);
         const collection = db.collection(collectionName);
 
-        await fs.mkdir(userCIDsDir, { recursive: true }); // Ensure the 'userCIDs' directory exists
+        await fs.mkdir(downloadsDir, { recursive: true }); // Ensure the 'downloads' directory exists
 
         // Update the query to only select documents without a cuckoo_score
         const cursor = collection.find({ cuckoo_score: { $exists: false } });
@@ -47,7 +46,7 @@ async function downloadFromIPFS() {
             if (doc.ipfsCID) {
                 console.log(`Downloading content for CID: ${doc.ipfsCID}`);
                 const objectIdStr = doc._id.toString(); // Convert ObjectId to string
-                const downloadPath = path.join(userCIDsDir, `${objectIdStr}.txt`); // Update path to use 'userCIDsDir'
+                const downloadPath = path.join(downloadsDir, `${objectIdStr}.txt`); // Update path to use 'downloadsDir'
                 try {
                     await downloadFile(ipfs, objectIdStr, doc.ipfsCID, downloadPath);
                 } catch (error) {

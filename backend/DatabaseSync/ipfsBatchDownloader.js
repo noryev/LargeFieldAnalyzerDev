@@ -4,8 +4,8 @@ import path from 'path';
 
 // Initialize IPFS client
 const ipfs = create({ url: 'http://127.0.0.1:5001' });
-const downloadsDir = path.resolve('./downloads/userCIDs');
-const outputDir = path.join(downloadsDir, 'output'); // Output directory inside downloads
+const downloadsDir = path.resolve('./analysisCIDs');
+const outputDir = path.resolve('./analysisQueue'); // Output directory at the same level as downloads
 
 /**
  * Download content from a given CID and save it to a specified path within the output subfolder.

@@ -1,5 +1,5 @@
 .env
 node_modules
 analyzerbackend/DatabaseSync/.env
-downloads
-output
+analysisQueue
+analysisCIDs
