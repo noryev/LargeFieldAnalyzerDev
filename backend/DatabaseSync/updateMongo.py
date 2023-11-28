@@ -1,8 +1,9 @@
 import os
-from dotenv import load_dotenv
-import requests
+import shutil
 import time
+import requests
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -35,7 +36,6 @@ def submit_to_cuckoo(file_path):
             print("Error submitting file to Cuckoo: {}".format(e))
             return None
 
-
 def get_cuckoo_report(task_id):
     print("Fetching report for Task ID: {}...".format(task_id))
     if task_id is None:
@@ -53,41 +53,61 @@ def get_cuckoo_report(task_id):
         print("Error fetching report from Cuckoo: {}".format(e))
         return None
 
-
 def update_mongo(ipfs_cid, score):
     print("Updating MongoDB for IPFS CID: {} with score: {}".format(ipfs_cid, score))
     if score is not None:
         collection.update_one(
-            {'ipfsCID': ipfs_cid},  # Changed from 'ipfs_cid' to 'ipfsCID'
+            {'ipfsCID': ipfs_cid},
             {'$set': {'cuckoo_score': score}},
             upsert=True
         )
         print("MongoDB updated successfully.")
 
+def clear_directory(directory):
+    if os.path.exists(directory):
+        print("Clearing contents of directory: {}".format(directory))
+        for filename in os.listdir(directory):
+            file_path = os.path.join(directory, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print('Failed to delete {}. Reason: {}'.format(file_path, e))
+    else:
+        print("Directory not found: {}".format(directory))
+
 def process_file(file_path, base_folder):
     print("Processing file: {}".format(file_path))
-    
-    # Extract the part of the file path relative to the base folder
-    relative_path = os.path.relpath(file_path, base_folder)
-    
-    # The first part of the relative path is the outermost folder name,
-    # which is assumed to be the ipfsCID
-    ipfs_cid = relative_path.split(os.sep)[0]
+
+    # Correctly extracting IPFS CID
+    path_parts = file_path.split(os.sep)
+    try:
+        ipfs_cid_index = path_parts.index('analysisQueue') + 1
+        ipfs_cid = path_parts[ipfs_cid_index]
+    except (ValueError, IndexError):
+        print("Error: Unable to extract IPFS CID from path")
+        return
+
     print("Extracted IPFS CID: {} from path {}".format(ipfs_cid, file_path))
+
     task_id = submit_to_cuckoo(file_path)
-    time.sleep(180)  # Adjust this based on expected analysis time
+    time.sleep(180)  # Adjust based on expected analysis time
 
     report = get_cuckoo_report(task_id)
     if report is not None:
         score = report.get('info', {}).get('score', 0)
         update_mongo(ipfs_cid, score)
+        clear_directory(os.path.join(base_folder, 'analysisCIDs'))  # Clear analysisCIDs directory
+        clear_directory(base_folder)  # Clear analysisQueue directory
 
 def process_folder(folder_path):
     print("Processing folder: {}".format(folder_path))
     for root, dirs, files in os.walk(folder_path):
         for file in files:
             file_path = os.path.join(root, file)
-            process_file(file_path, folder_path)
+            process_file(file_path, root)
 
-folder_path = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/downloads/userCIDs/output'
+folder_path = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/analysisQueue'
 process_folder(folder_path)
