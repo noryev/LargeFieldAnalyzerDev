@@ -65,16 +65,12 @@ def update_mongo(ipfs_cid, score):
 
 def clear_directory(directory):
     if os.path.exists(directory):
-        print("Clearing contents of directory: {}".format(directory))
-        for filename in os.listdir(directory):
-            file_path = os.path.join(directory, filename)
-            try:
-                if os.path.isfile(file_path) or os.path.islink(file_path):
-                    os.unlink(file_path)
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
-            except Exception as e:
-                print('Failed to delete {}. Reason: {}'.format(file_path, e))
+        print("Deleting directory and its contents: {}".format(directory))
+        try:
+            shutil.rmtree(directory)
+            print("Deleted directory: {}".format(directory))
+        except Exception as e:
+            print('Failed to delete {}. Reason: {}'.format(directory, e))
     else:
         print("Directory not found: {}".format(directory))
 
