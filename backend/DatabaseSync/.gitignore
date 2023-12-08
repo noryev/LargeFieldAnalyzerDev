@@ -3,3 +3,4 @@ node_modules
 analyzerbackend/DatabaseSync/.env
 analysisQueue
 analysisCIDs
+cron.production
