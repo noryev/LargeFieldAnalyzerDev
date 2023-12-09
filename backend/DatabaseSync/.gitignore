@@ -5,3 +5,4 @@ analysisQueue
 analysisCIDs
 cron.production
 logfile.log
+backend/host-ui/node_modules
