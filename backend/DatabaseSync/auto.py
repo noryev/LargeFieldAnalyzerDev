@@ -23,9 +23,9 @@ def run_update_mongo():
     logging.info("Finished updateMongo.py")
 
 # Schedule the scripts
-schedule.every(2).hours.do(run_ipfs_batch_downloader)
-schedule.every(3).hours.do(run_update_mongo)
-schedule.every(5).minutes.do(run_database_pull)
+schedule.every(1).hours.do(run_ipfs_batch_downloader)
+schedule.every(2).hours.do(run_update_mongo)
+schedule.every(45).minutes.do(run_database_pull)
 
 while True:
     schedule.run_pending()
