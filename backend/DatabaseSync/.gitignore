@@ -4,3 +4,4 @@ analyzerbackend/DatabaseSync/.env
 analysisQueue
 analysisCIDs
 cron.production
+logfile.log
