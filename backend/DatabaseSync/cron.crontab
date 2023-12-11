@@ -1,4 +1,0 @@
-0 * * * * /usr/bin/node /home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/databasePull.js
-15 * * * * /usr/bin/node /home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/ipfsBatchDownloader.js
-30 * * * * /usr/bin/python /home/major-shepard/Documents/LargeFieldDataAnalyzer/backend/DatabaseSync/updateMongo.py
-

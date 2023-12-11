@@ -9,7 +9,7 @@ app.use(express.static('public'));
 
 // Endpoint to get log data
 app.get('/get-log', (req, res) => {
-    fs.readFile('script_scheduler.log', 'utf8', (err, data) => {
+    fs.readFile('DatabaseSync/script_scheduler.log', 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading log file:', err);
             return res.status(500).send('Error reading log file');
