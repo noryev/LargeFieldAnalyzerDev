@@ -1,58 +1,71 @@
+async function encryptFile(content, key) {
+    const iv = crypto.getRandomValues(new Uint8Array(16));
+    const algorithm = { name: "AES-CBC", iv: iv };
+    const cryptoKey = await crypto.subtle.importKey("raw", key, algorithm, false, ["encrypt"]);
+
+    const encrypted = await crypto.subtle.encrypt(algorithm, cryptoKey, content);
+    return { iv: bufferToHex(iv), content: bufferToHex(new Uint8Array(encrypted)) };
+}
+
+async function decryptFile(encryptedObj, key) {
+    const iv = hexToBuffer(encryptedObj.iv);
+    const algorithm = { name: "AES-CBC", iv: iv };
+    const cryptoKey = await crypto.subtle.importKey("raw", key, algorithm, false, ["decrypt"]);
+
+    const decrypted = await crypto.subtle.decrypt(algorithm, cryptoKey, hexToBuffer(encryptedObj.content));
+    return new TextDecoder().decode(new Uint8Array(decrypted));
+}
+
+function bufferToHex(buffer) {
+    return Array.from(new Uint8Array(buffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+function hexToBuffer(hexString) {
+    const bytes = new Uint8Array(Math.ceil(hexString.length / 2));
+    for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(hexString.substr(i * 2, 2), 16);
+    }
+    return bytes;
+}
+
+// Usage example
+addEventListener('fetch', event => {
+    event.respondWith(handleRequest(event.request));
+});
 
 addEventListener('fetch', event => {
-    event.respondWith(handleRequest(event.request))
-  })
+    event.respondWith(handleRequest(event.request));
+  });
   
   async function handleRequest(request) {
-    const url = new URL(request.url);
-    const bucketName = 'your-bucket-name'; // Replace with your R2 bucket name
-    const objectName = 'your-object-name'; // Replace with your desired object name
-    const cloudflareApiToken = 'your-api-token'; // Replace with your API token
+    if (request.method === 'POST') {
+      return handlePostRequest(request);
+    } else {
+      return new Response('Expected POST', { status: 405 });
+    }
+  }
   
-    if (url.pathname === '/store') {
-      try {
-        const fileContent = await request.text(); // Or use request.json(), request.formData(), etc. based on your needs
+  async function handlePostRequest(request) {
+    const formData = await request.formData();
+    const file = formData.get('file');
   
-        const r2Url = `https://api.cloudflare.com/client/v4/accounts/${accountID}/storage/kv/namespaces/${namespaceID}/values/${objectName}`;
-        
-        const response = await fetch(r2Url, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${cloudflareApiToken}`,
-            'Content-Type': 'application/octet-stream',
-          },
-          body: fileContent
-        });
-  
-        return new Response('Object stored successfully', { status: 200 });
-      } catch (error) {
-        return new Response('Error storing object', { status: 500 });
-      }
+    if (!file || file.type !== 'text/csv') {
+      return new Response('Invalid file type. Please upload a .csv file.', { status: 400 });
     }
   
-    return new Response('Invalid request', { status: 400 });
+    try {
+      const encryptedContent = await encryptFile(file);
+  
+      // Replace 'my-r2-bucket' with your R2 bucket name
+      await logs.put(file.name, encryptedContent);
+  
+      return new Response('File uploaded and encrypted successfully', { status: 200 });
+    } catch (error) {
+      return new Response(`Error: ${error}`, { status: 500 });
+    }
   }
 
-  
-
-async function handleRequest(request) {
-    // Generate a new API token for R2
-    const token = await generateR2Token()
-
-    // Return the token as the response
-    return new Response(token, { status: 200 })
-}
-
-async function generateR2Token() {
-    // Your code to generate a new API token for R2 goes here
-    // Make the necessary API calls to R2 to create a new token
-    // Return the generated token
-
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let token = ''
-    for (let i = 0; i < 32; i++) {
-        token += characters.charAt(Math.floor(Math.random() * characters.length))
-    }
-
-    return token
-}
+// Replace 'my-r2-bucket' with your actual R2 bucket name and configure it in your Cloudflare Worker settings
+const MY_R2_BUCKET = new R2Bucket('my-r2-bucket');
