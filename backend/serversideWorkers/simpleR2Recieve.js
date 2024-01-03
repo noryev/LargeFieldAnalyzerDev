@@ -28,17 +28,34 @@ addEventListener('fetch', event => {
     const file = formData.get('file');
   
     if (!file || file.type !== 'text/csv') {
-      return new Response('Invalid file type. Please upload a .csv file.', {
+      return new Response(JSON.stringify({ error: 'Invalid file type. Please upload a .csv file.' }), {
         status: 400,
-        headers: corsHeaders,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
   
-    // Temporarily respond with a success message without encrypting or storing the file
-    return new Response(`Received file: ${file.name}`, {
-      status: 200,
-      headers: corsHeaders,
-    });
+    try {
+      // Read the file as an ArrayBuffer
+      const arrayBuffer = await file.arrayBuffer();
+      
+      // Store the file in R2 bucket
+      await MY_R2_BUCKET.put(file.name, arrayBuffer, {
+        httpMetadata: {
+          contentType: file.type,
+        }
+      });
+  
+      return new Response(JSON.stringify({ message: `File uploaded successfully: ${file.name}` }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } catch (error) {
+      console.error(error);
+      return new Response(JSON.stringify({ error: 'Failed to upload file.' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
   }
   
   function handleCors(request) {
@@ -61,22 +78,4 @@ addEventListener('fetch', event => {
     return new Response(null, { headers });
   }
   
-  // Comment out the encryption functions for now
-  /*
-  async function encryptFile(content, key) {
-    // ...
-  }
-  
-  async function decryptFile(encryptedObj, key) {
-    // ...
-  }
-  
-  function bufferToHex(buffer) {
-    // ...
-  }
-  
-  function hexToBuffer(hexString) {
-    // ...
-  }
-  */
-  
+  // Ensure you have a binding to your R2 bucket
