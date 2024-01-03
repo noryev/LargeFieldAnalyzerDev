@@ -1,0 +1,3 @@
+[[r2_buckets]]
+binding = 'MY_R2_BUCKET'  # The variable name used in your script
+bucket_name = 'logs'  # Your actual R2 bucket name
