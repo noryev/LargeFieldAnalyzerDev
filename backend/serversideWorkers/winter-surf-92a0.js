@@ -25,10 +25,54 @@ function handleCorsHeaders(request) {
   return new Headers({
     "Access-Control-Allow-Origin": request.headers.get("Origin") || "*",
     "Access-Control-Allow-Methods": "PUT, GET, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Key, nyxlszj14dlgq9re",
+    "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Key, X-Username",
     "Access-Control-Max-Age": "86400"
   });
 }
+async function sendLogToMongoDB(env, key, username) {
+  const dataApiUrl = `https://data.mongodb-api.com/app/data-uucwm/endpoint/data/v1/action/insertOne`;
+  const dataSource = env.DATA_SOURCE_NAME;
+  const databaseName = env.DATABASE_NAME;
+  const collectionName = env.COLLECTION_NAME;
+  const dataApiKey = env.API_KEY;
+  const logEntry = {
+    fileId: key,
+    username,
+    // Changed from userId to username
+    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  await fetch(dataApiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "api-key": dataApiKey
+    },
+    body: JSON.stringify({
+      collection: collectionName,
+      database: databaseName,
+      dataSource,
+      document: logEntry
+    })
+  });
+}
+
+async function handlePutRequest(request, env) {
+  const formData = await request.formData();
+  const file = formData.get('file');
+  const username = request.headers.get("X-Username");
+
+  if (!file || !username) {
+    return new Response("File or username missing", { status: 400, headers: handleCorsHeaders(request) });
+  }
+
+  // Use the filename from the FormData
+  const filename = file.name;
+
+  await env.MY_BUCKET.put(filename, file.stream());
+  await sendLogToMongoDB(env, filename, username);
+  return new Response(`Put ${filename} successfully!`, { headers: handleCorsHeaders(request) });
+}
+
 var src_default = {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -42,31 +86,14 @@ var src_default = {
     try {
       switch (request.method) {
         case "PUT":
+          return handlePutRequest(request, env);
+          const username = request.headers.get("X-Username");
+          if (!username) {
+            return new Response("Username missing", { status: 400, headers: handleCorsHeaders(request) });
+          }
           await env.MY_BUCKET.put(key, request.body);
+          await sendLogToMongoDB(env, key, username);
           return new Response(`Put ${key} successfully!`, { headers: handleCorsHeaders(request) });
-        case "GET":
-          const object = await env.MY_BUCKET.get(key);
-          if (object === null) {
-            return new Response("Object Not Found", { status: 404, headers: handleCorsHeaders(request) });
-          }
-          const headers = new Headers();
-          object.writeHttpMetadata(headers);
-          headers.set("etag", object.httpEtag);
-          for (const [k, v] of handleCorsHeaders(request)) {
-            headers.set(k, v);
-          }
-          return new Response(object.body, { headers });
-        case "DELETE":
-          await env.MY_BUCKET.delete(key);
-          return new Response("Deleted!", { headers: handleCorsHeaders(request) });
-        default:
-          return new Response("Method Not Allowed", {
-            status: 405,
-            headers: {
-              Allow: "PUT, GET, DELETE",
-              ...handleCorsHeaders(request)
-            }
-          });
       }
     } catch (error) {
       console.error(`Error handling ${request.method} request:`, error);
