@@ -1,10 +1,11 @@
-// src/index.js
 var ALLOW_LIST = ["file.csv"];
+
 var hasValidHeader = (request, env) => {
   const receivedKey = request.headers.get("X-Custom-Auth-Key");
   console.log(`Received key: ${receivedKey}, Expected key: ${env.AUTH_KEY_SECRET}`);
   return receivedKey === env.AUTH_KEY_SECRET;
 };
+
 function authorizeRequest(request, env, key) {
   let isAuthorized = false;
   switch (request.method) {
@@ -21,15 +22,17 @@ function authorizeRequest(request, env, key) {
   console.log(`Method: ${request.method}, Key: ${key}, Authorized: ${isAuthorized}`);
   return isAuthorized;
 }
+
 function handleCorsHeaders(request) {
   return new Headers({
     "Access-Control-Allow-Origin": request.headers.get("Origin") || "*",
     "Access-Control-Allow-Methods": "PUT, GET, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Key, X-Username",
+    "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Key, X-UserId",
     "Access-Control-Max-Age": "86400"
   });
 }
-async function sendLogToMongoDB(env, key, username) {
+
+async function sendLogToMongoDB(env, key, userId) {
   const dataApiUrl = `https://data.mongodb-api.com/app/data-uucwm/endpoint/data/v1/action/insertOne`;
   const dataSource = env.DATA_SOURCE_NAME;
   const databaseName = env.DATABASE_NAME;
@@ -37,10 +40,10 @@ async function sendLogToMongoDB(env, key, username) {
   const dataApiKey = env.API_KEY;
   const logEntry = {
     fileId: key,
-    username,
-    // Changed from userId to username
-    timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    userId,
+    timestamp: new Date().toISOString()
   };
+
   await fetch(dataApiUrl, {
     method: "POST",
     headers: {
@@ -59,17 +62,16 @@ async function sendLogToMongoDB(env, key, username) {
 async function handlePutRequest(request, env) {
   const formData = await request.formData();
   const file = formData.get('file');
-  const username = request.headers.get("X-Username");
+  const userId = request.headers.get("X-UserId");
 
-  if (!file || !username) {
-    return new Response("File or username missing", { status: 400, headers: handleCorsHeaders(request) });
+  if (!file || !userId) {
+    return new Response("File or UserId missing", { status: 400, headers: handleCorsHeaders(request) });
   }
 
-  // Use the filename from the FormData
   const filename = file.name;
 
   await env.MY_BUCKET.put(filename, file.stream());
-  await sendLogToMongoDB(env, filename, username);
+  await sendLogToMongoDB(env, filename, userId);
   return new Response(`Put ${filename} successfully!`, { headers: handleCorsHeaders(request) });
 }
 
@@ -87,13 +89,6 @@ var src_default = {
       switch (request.method) {
         case "PUT":
           return handlePutRequest(request, env);
-          const username = request.headers.get("X-Username");
-          if (!username) {
-            return new Response("Username missing", { status: 400, headers: handleCorsHeaders(request) });
-          }
-          await env.MY_BUCKET.put(key, request.body);
-          await sendLogToMongoDB(env, key, username);
-          return new Response(`Put ${key} successfully!`, { headers: handleCorsHeaders(request) });
       }
     } catch (error) {
       console.error(`Error handling ${request.method} request:`, error);
@@ -101,6 +96,7 @@ var src_default = {
     }
   }
 };
+
 export {
   src_default as default
 };
