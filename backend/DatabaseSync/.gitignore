@@ -7,3 +7,4 @@ cron.production
 script_scheduler.log
 logfile.log
 backend/host-ui/node_modules
+backend/serversideWorkers/devR2Recieve/wrangler.toml
