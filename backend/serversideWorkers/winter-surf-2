@@ -1,4 +1,4 @@
-Code used to pull down CSV file- saved before reverting to previous version
+//Code used to pull down CSV file- saved before reverting to previous version
 
 var hasValidHeader = (request, env) => {
   const receivedKey = request.headers.get("X-Custom-Auth-Key");
