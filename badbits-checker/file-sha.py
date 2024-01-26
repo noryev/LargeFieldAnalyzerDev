@@ -1,6 +1,9 @@
 import requests
 import hashlib
 
+# Set the path of the text file containing SHA hashes here
+hashes_txt_file_path = "badbits.txt"
+
 def download_file(url):
     try:
         response = requests.get(url)
@@ -21,14 +24,13 @@ def check_hash_in_list(sha_hash, file_path):
 
 def main():
     url = input("Enter the URL of the file: ")
-    txt_file_path = input("Enter the path of the text file with SHA hashes: ")
 
     file_content = download_file(url)
     if file_content is not None:
         sha_hash = compute_sha_hash(file_content)
         print(f"SHA Hash of downloaded file: {sha_hash}")
 
-        if check_hash_in_list(sha_hash, txt_file_path):
+        if check_hash_in_list(sha_hash, hashes_txt_file_path):
             print("The hash matches one in the list.")
         else:
             print("No matching hash found in the list.")
