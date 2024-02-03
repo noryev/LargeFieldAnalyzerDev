@@ -1,4 +1,5 @@
-//Code used to pull down CSV file- saved before reverting to previous version
+// @ts-nocheck
+var ALLOW_LIST = ["file.csv"];
 
 var hasValidHeader = (request, env) => {
   const receivedKey = request.headers.get("X-Custom-Auth-Key");
@@ -6,86 +7,105 @@ var hasValidHeader = (request, env) => {
   return receivedKey === env.AUTH_KEY_SECRET;
 };
 
-function authorizeRequest(request, env) {
+function authorizeRequest(request, env, key) {
   let isAuthorized = false;
   switch (request.method) {
-    case "PUT":
+    case "POST":
     case "DELETE":
-    case "GET": // Add GET here to use the same authorization logic as PUT and DELETE
       isAuthorized = hasValidHeader(request, env);
+      break;
+    case "GET":
+      isAuthorized = ALLOW_LIST.includes(key);
       break;
     default:
       isAuthorized = false;
   }
-  console.log(`Method: ${request.method}, Authorized: ${isAuthorized}`);
+  console.log(`Method: ${request.method}, Key: ${key}, Authorized: ${isAuthorized}`);
   return isAuthorized;
 }
 
 function handleCorsHeaders(request) {
   return new Headers({
-    "Access-Control-Allow-Origin": request.headers.get("Origin") || "*",
-    "Access-Control-Allow-Methods": "PUT, GET, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Key, X-UserId",
+    "Access-Control-Allow-Origin": "http://localhost:5173",
+    "Access-Control-Allow-Methods": "POST, GET, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Key, X-UserId, Authorization",
     "Access-Control-Max-Age": "86400"
   });
 }
 
-async function handleGetRequest(request, env) {
-  const url = new URL(request.url);
-  const key = url.pathname.slice(1);
+async function sendLogToMongoDB(env, key, userId) {
+  const dataApiUrl = `https://data.mongodb-api.com/app/data-uucwm/endpoint/data/v1/action/insertOne`;
+  const dataSource = env.DATA_SOURCE_NAME;
+  const databaseName = env.DATABASE_NAME;
+  const collectionName = env.COLLECTION_NAME;
+  const dataApiKey = env.API_KEY;
+  const logEntry = {
+    ipfsCID: key,
+    userId: userId,
+    timestamp: new Date().toISOString()
+  };
 
-  const object = await env.MY_BUCKET.get(key, { type: 'stream' });
-  if (!object) {
-    return new Response("File not found", { status: 404 });
-  }
-
-  return new Response(object.body, { 
+  await fetch(dataApiUrl, {
+    method: "POST",
     headers: {
-      "Content-Type": object.type,
-      "Content-Length": object.size.toString()
-    }
+      "Content-Type": "application/json",
+      "api-key": dataApiKey
+    },
+    body: JSON.stringify({
+      collection: collectionName,
+      database: databaseName,
+      dataSource,
+      document: logEntry
+    })
   });
 }
 
-async function handlePutRequest(request, env) {
-  const formData = await request.formData();
-  const file = formData.get('file');
-  const userId = request.headers.get("X-UserId");
+async function handlePostRequest(request, env) {
+  try {
+    const formData = await request.formData();
+    const file = formData.get('file');
+    if (!file /* instanceof File check here */) {
+      return new Response("Invalid file", { status: 400 });
+    }
+    const userId = request.headers.get("X-UserId");
 
-  if (!file || !userId) {
-    return new Response("File or UserId missing", { status: 400, headers: handleCorsHeaders(request) });
+    if (!userId || !file) {
+      return new Response("File or UserId missing", { status: 400 });
+    }
+
+    const filename = file.name;
+
+    await env.MY_BUCKET.put(filename, file.stream());
+    await sendLogToMongoDB(env, filename, userId);
+    return new Response(`Put ${filename} successfully!`, { headers: handleCorsHeaders(request) });
+  } catch (error) {
+    console.error(error);
+    return new Response("Internal Server Error", { status: 500 });
   }
-
-  const filename = file.name;
-
-  await env.MY_BUCKET.put(filename, file.stream());
-  await uploadLogFile(env, filename, userId);
-  return new Response(`Put ${filename} successfully!`, { headers: handleCorsHeaders(request) });
 }
 
 var src_default = {
   async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const key = url.pathname.slice(1);
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: handleCorsHeaders(request), status: 204 });
     }
-    if (!authorizeRequest(request, env)) { // Updated call without the key parameter
+    if (!authorizeRequest(request, env, key)) {
       return new Response("Forbidden", { status: 403, headers: handleCorsHeaders(request) });
     }
     try {
       switch (request.method) {
-        case "PUT":
-          return handlePutRequest(request, env);
-        case "GET":
-          return handleGetRequest(request, env);
-      }
-    } catch (error) {
-      console.error(`Error handling ${request.method} request:`, error);
-      return new Response("Internal Server Error", { status: 500 });
+        case "POST":
+          return handlePostRequest(request, env);
     }
+  } catch (error) {
+    console.error(`Error handling ${request.method} request:`, error);
+    return new Response("Internal Server Error", { status: 500 });
   }
+}
 };
 
 export {
-  src_default as default
+src_default as default
 };
-//# sourceMappingURL=index.js.map
