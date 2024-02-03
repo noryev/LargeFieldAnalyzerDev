@@ -1,0 +1,91 @@
+//Code used to pull down CSV file- saved before reverting to previous version
+
+var hasValidHeader = (request, env) => {
+  const receivedKey = request.headers.get("X-Custom-Auth-Key");
+  console.log(`Received key: ${receivedKey}, Expected key: ${env.AUTH_KEY_SECRET}`);
+  return receivedKey === env.AUTH_KEY_SECRET;
+};
+
+function authorizeRequest(request, env) {
+  let isAuthorized = false;
+  switch (request.method) {
+    case "PUT":
+    case "DELETE":
+    case "GET": // Add GET here to use the same authorization logic as PUT and DELETE
+      isAuthorized = hasValidHeader(request, env);
+      break;
+    default:
+      isAuthorized = false;
+  }
+  console.log(`Method: ${request.method}, Authorized: ${isAuthorized}`);
+  return isAuthorized;
+}
+
+function handleCorsHeaders(request) {
+  return new Headers({
+    "Access-Control-Allow-Origin": request.headers.get("Origin") || "*",
+    "Access-Control-Allow-Methods": "PUT, GET, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Key, X-UserId",
+    "Access-Control-Max-Age": "86400"
+  });
+}
+
+async function handleGetRequest(request, env) {
+  const url = new URL(request.url);
+  const key = url.pathname.slice(1);
+
+  const object = await env.MY_BUCKET.get(key, { type: 'stream' });
+  if (!object) {
+    return new Response("File not found", { status: 404 });
+  }
+
+  return new Response(object.body, { 
+    headers: {
+      "Content-Type": object.type,
+      "Content-Length": object.size.toString()
+    }
+  });
+}
+
+async function handlePutRequest(request, env) {
+  const formData = await request.formData();
+  const file = formData.get('file');
+  const userId = request.headers.get("X-UserId");
+
+  if (!file || !userId) {
+    return new Response("File or UserId missing", { status: 400, headers: handleCorsHeaders(request) });
+  }
+
+  const filename = file.name;
+
+  await env.MY_BUCKET.put(filename, file.stream());
+  await uploadLogFile(env, filename, userId);
+  return new Response(`Put ${filename} successfully!`, { headers: handleCorsHeaders(request) });
+}
+
+var src_default = {
+  async fetch(request, env, ctx) {
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: handleCorsHeaders(request), status: 204 });
+    }
+    if (!authorizeRequest(request, env)) { // Updated call without the key parameter
+      return new Response("Forbidden", { status: 403, headers: handleCorsHeaders(request) });
+    }
+    try {
+      switch (request.method) {
+        case "PUT":
+          return handlePutRequest(request, env);
+        case "GET":
+          return handleGetRequest(request, env);
+      }
+    } catch (error) {
+      console.error(`Error handling ${request.method} request:`, error);
+      return new Response("Internal Server Error", { status: 500 });
+    }
+  }
+};
+
+export {
+  src_default as default
+};
+//# sourceMappingURL=index.js.map
