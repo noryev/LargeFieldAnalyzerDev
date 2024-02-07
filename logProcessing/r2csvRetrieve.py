@@ -38,3 +38,41 @@ def main():
 
 if __name__ == "__main__":
     main()
+from pymongo import MongoClient
+import requests
+
+# MongoDB Atlas connection string
+mongo_conn_string = 'your_mongo_connection_string'
+
+# Connect to the MongoDB Atlas cluster
+client = MongoClient(mongo_conn_string)
+
+# Select your database
+db = client['DB_NAME']
+
+# Select your collection
+collection = db['user-cids']
+
+# Query for documents where 'cid' ends with '.csv' and 'cuckoo_score' is not present
+query = {"cid": {"$regex": "\.csv$"}, "cuckoo_score": {"$exists": False}}
+documents = collection.find(query)
+
+# Replace with your R2 server base URL
+r2_base_url = 'http://your_r2_server_base_url/'
+
+# Iterate over the fetched documents
+for doc in documents:
+    cid = doc['cid']
+    file_url = r2_base_url + cid  # Construct the URL to pull the file
+
+    # Pull the file from R2 server
+    response = requests.get(file_url)
+    if response.status_code == 200:
+        # Handle the file (save it, process it, etc.)
+        with open(cid, 'wb') as file:
+            file.write(response.content)
+    else:
+        print(f"Failed to download {cid}")
+
+# Close the MongoDB connection
+client.close()

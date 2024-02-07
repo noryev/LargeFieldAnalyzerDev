@@ -6873,3 +6873,105 @@
 2024-01-28 12:38:48,439 - Running job Every 45 minutes do run_database_pull() (last run: 2024-01-28 11:53:47, next run: 2024-01-28 12:38:47)
 2024-01-28 12:38:48,439 - Starting databasePull.js
 2024-01-28 12:38:48,607 - Finished databasePull.js
+2024-02-06 20:30:02,305 - Running job Every 1 hour do run_database_pull() (last run: [never], next run: 2024-02-06 20:30:01)
+2024-02-06 20:30:02,312 - Starting databasePull.js
+2024-02-06 20:30:02,480 - Finished databasePull.js
+2024-02-06 21:30:02,059 - Running job Every 2 hours do run_ipfs_batch_downloader() (last run: [never], next run: 2024-02-06 21:30:01)
+2024-02-06 21:30:02,060 - Starting ipfsBatchDownloader.js
+2024-02-06 21:30:02,226 - Finished ipfsBatchDownloader.js
+2024-02-06 21:30:03,227 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-06 20:30:02, next run: 2024-02-06 21:30:02)
+2024-02-06 21:30:03,227 - Starting databasePull.js
+2024-02-06 21:30:03,391 - Finished databasePull.js
+2024-02-06 22:30:01,989 - Running job Every 3 hours do run_update_mongo() (last run: [never], next run: 2024-02-06 22:30:01)
+2024-02-06 22:30:01,989 - Starting updateMongo.py
+2024-02-06 22:30:01,995 - Finished updateMongo.py
+2024-02-06 22:30:03,997 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-06 21:30:03, next run: 2024-02-06 22:30:03)
+2024-02-06 22:30:03,997 - Starting databasePull.js
+2024-02-06 22:30:04,164 - Finished databasePull.js
+2024-02-06 23:30:02,818 - Running job Every 2 hours do run_ipfs_batch_downloader() (last run: 2024-02-06 21:30:02, next run: 2024-02-06 23:30:02)
+2024-02-06 23:30:02,818 - Starting ipfsBatchDownloader.js
+2024-02-06 23:30:02,983 - Finished ipfsBatchDownloader.js
+2024-02-06 23:30:04,985 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-06 22:30:04, next run: 2024-02-06 23:30:04)
+2024-02-06 23:30:04,985 - Starting databasePull.js
+2024-02-06 23:30:05,153 - Finished databasePull.js
+2024-02-07 00:30:05,771 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-06 23:30:05, next run: 2024-02-07 00:30:05)
+2024-02-07 00:30:05,771 - Starting databasePull.js
+2024-02-07 00:30:05,937 - Finished databasePull.js
+2024-02-07 01:30:02,555 - Running job Every 3 hours do run_update_mongo() (last run: 2024-02-06 22:30:01, next run: 2024-02-07 01:30:01)
+2024-02-07 01:30:02,555 - Starting updateMongo.py
+2024-02-07 01:30:02,560 - Finished updateMongo.py
+2024-02-07 01:30:03,561 - Running job Every 2 hours do run_ipfs_batch_downloader() (last run: 2024-02-06 23:30:02, next run: 2024-02-07 01:30:02)
+2024-02-07 01:30:03,561 - Starting ipfsBatchDownloader.js
+2024-02-07 01:30:03,731 - Finished ipfsBatchDownloader.js
+2024-02-07 01:30:06,733 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 00:30:05, next run: 2024-02-07 01:30:05)
+2024-02-07 01:30:06,733 - Starting databasePull.js
+2024-02-07 01:30:06,904 - Finished databasePull.js
+2024-02-07 02:30:07,503 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 01:30:06, next run: 2024-02-07 02:30:06)
+2024-02-07 02:30:07,503 - Starting databasePull.js
+2024-02-07 02:30:07,669 - Finished databasePull.js
+2024-02-07 03:30:04,294 - Running job Every 2 hours do run_ipfs_batch_downloader() (last run: 2024-02-07 01:30:03, next run: 2024-02-07 03:30:03)
+2024-02-07 03:30:04,294 - Starting ipfsBatchDownloader.js
+2024-02-07 03:30:04,461 - Finished ipfsBatchDownloader.js
+2024-02-07 03:30:08,466 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 02:30:07, next run: 2024-02-07 03:30:07)
+2024-02-07 03:30:08,466 - Starting databasePull.js
+2024-02-07 03:30:08,635 - Finished databasePull.js
+2024-02-07 04:30:03,323 - Running job Every 3 hours do run_update_mongo() (last run: 2024-02-07 01:30:02, next run: 2024-02-07 04:30:02)
+2024-02-07 04:30:03,323 - Starting updateMongo.py
+2024-02-07 04:30:03,329 - Finished updateMongo.py
+2024-02-07 04:30:09,335 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 03:30:08, next run: 2024-02-07 04:30:08)
+2024-02-07 04:30:09,336 - Starting databasePull.js
+2024-02-07 04:30:09,501 - Finished databasePull.js
+2024-02-07 05:30:05,155 - Running job Every 2 hours do run_ipfs_batch_downloader() (last run: 2024-02-07 03:30:04, next run: 2024-02-07 05:30:04)
+2024-02-07 05:30:05,155 - Starting ipfsBatchDownloader.js
+2024-02-07 05:30:05,325 - Finished ipfsBatchDownloader.js
+2024-02-07 05:30:10,331 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 04:30:09, next run: 2024-02-07 05:30:09)
+2024-02-07 05:30:10,331 - Starting databasePull.js
+2024-02-07 05:30:10,498 - Finished databasePull.js
+2024-02-07 06:30:11,116 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 05:30:10, next run: 2024-02-07 06:30:10)
+2024-02-07 06:30:11,116 - Starting databasePull.js
+2024-02-07 06:30:11,285 - Finished databasePull.js
+2024-02-07 07:30:03,938 - Running job Every 3 hours do run_update_mongo() (last run: 2024-02-07 04:30:03, next run: 2024-02-07 07:30:03)
+2024-02-07 07:30:03,938 - Starting updateMongo.py
+2024-02-07 07:30:03,943 - Finished updateMongo.py
+2024-02-07 07:30:05,945 - Running job Every 2 hours do run_ipfs_batch_downloader() (last run: 2024-02-07 05:30:05, next run: 2024-02-07 07:30:05)
+2024-02-07 07:30:05,945 - Starting ipfsBatchDownloader.js
+2024-02-07 07:30:06,117 - Finished ipfsBatchDownloader.js
+2024-02-07 07:30:12,123 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 06:30:11, next run: 2024-02-07 07:30:11)
+2024-02-07 07:30:12,123 - Starting databasePull.js
+2024-02-07 07:30:12,289 - Finished databasePull.js
+2024-02-07 08:30:12,979 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 07:30:12, next run: 2024-02-07 08:30:12)
+2024-02-07 08:30:12,979 - Starting databasePull.js
+2024-02-07 08:30:13,144 - Finished databasePull.js
+2024-02-07 09:30:06,779 - Running job Every 2 hours do run_ipfs_batch_downloader() (last run: 2024-02-07 07:30:06, next run: 2024-02-07 09:30:06)
+2024-02-07 09:30:06,779 - Starting ipfsBatchDownloader.js
+2024-02-07 09:30:06,957 - Finished ipfsBatchDownloader.js
+2024-02-07 09:30:13,967 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 08:30:13, next run: 2024-02-07 09:30:13)
+2024-02-07 09:30:13,967 - Starting databasePull.js
+2024-02-07 09:30:14,133 - Finished databasePull.js
+2024-02-07 10:30:04,795 - Running job Every 3 hours do run_update_mongo() (last run: 2024-02-07 07:30:03, next run: 2024-02-07 10:30:03)
+2024-02-07 10:30:04,795 - Starting updateMongo.py
+2024-02-07 10:30:04,800 - Finished updateMongo.py
+2024-02-07 10:30:14,810 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 09:30:14, next run: 2024-02-07 10:30:14)
+2024-02-07 10:30:14,810 - Starting databasePull.js
+2024-02-07 10:30:14,976 - Finished databasePull.js
+2024-02-07 11:30:07,603 - Running job Every 2 hours do run_ipfs_batch_downloader() (last run: 2024-02-07 09:30:06, next run: 2024-02-07 11:30:06)
+2024-02-07 11:30:07,603 - Starting ipfsBatchDownloader.js
+2024-02-07 11:30:07,770 - Finished ipfsBatchDownloader.js
+2024-02-07 11:30:15,779 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 10:30:14, next run: 2024-02-07 11:30:14)
+2024-02-07 11:30:15,779 - Starting databasePull.js
+2024-02-07 11:30:15,945 - Finished databasePull.js
+2024-02-07 12:30:16,579 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 11:30:15, next run: 2024-02-07 12:30:15)
+2024-02-07 12:30:16,579 - Starting databasePull.js
+2024-02-07 12:30:16,742 - Finished databasePull.js
+2024-02-07 13:30:05,356 - Running job Every 3 hours do run_update_mongo() (last run: 2024-02-07 10:30:04, next run: 2024-02-07 13:30:04)
+2024-02-07 13:30:05,357 - Starting updateMongo.py
+2024-02-07 13:30:05,362 - Finished updateMongo.py
+2024-02-07 13:30:08,365 - Running job Every 2 hours do run_ipfs_batch_downloader() (last run: 2024-02-07 11:30:07, next run: 2024-02-07 13:30:07)
+2024-02-07 13:30:08,365 - Starting ipfsBatchDownloader.js
+2024-02-07 13:30:08,532 - Finished ipfsBatchDownloader.js
+2024-02-07 13:30:17,541 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 12:30:16, next run: 2024-02-07 13:30:16)
+2024-02-07 13:30:17,541 - Starting databasePull.js
+2024-02-07 13:30:17,706 - Finished databasePull.js
+2024-02-07 14:30:18,335 - Running job Every 1 hour do run_database_pull() (last run: 2024-02-07 13:30:17, next run: 2024-02-07 14:30:17)
+2024-02-07 14:30:18,335 - Starting databasePull.js
+2024-02-07 14:30:18,500 - Finished databasePull.js
