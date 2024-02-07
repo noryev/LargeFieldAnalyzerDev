@@ -1,3 +1,4 @@
+// @ts-nocheck
 var ALLOW_LIST = ["file.csv"];
 
 var hasValidHeader = (request, env) => {
@@ -9,7 +10,7 @@ var hasValidHeader = (request, env) => {
 function authorizeRequest(request, env, key) {
   let isAuthorized = false;
   switch (request.method) {
-    case "PUT":
+    case "POST":
     case "DELETE":
       isAuthorized = hasValidHeader(request, env);
       break;
@@ -25,9 +26,9 @@ function authorizeRequest(request, env, key) {
 
 function handleCorsHeaders(request) {
   return new Headers({
-    "Access-Control-Allow-Origin": request.headers.get("Origin") || "*",
-    "Access-Control-Allow-Methods": "PUT, GET, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Key, X-UserId",
+    "Access-Control-Allow-Origin": "http://localhost:5173",
+    "Access-Control-Allow-Methods": "POST, GET, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, X-Custom-Auth-Key, X-UserId, Authorization",
     "Access-Control-Max-Age": "86400"
   });
 }
@@ -39,8 +40,8 @@ async function sendLogToMongoDB(env, key, userId) {
   const collectionName = env.COLLECTION_NAME;
   const dataApiKey = env.API_KEY;
   const logEntry = {
-    fileId: key,
-    userId,
+    ipfsCID: key,
+    userId: userId,
     timestamp: new Date().toISOString()
   };
 
@@ -59,20 +60,28 @@ async function sendLogToMongoDB(env, key, userId) {
   });
 }
 
-async function handlePutRequest(request, env) {
-  const formData = await request.formData();
-  const file = formData.get('file');
-  const userId = request.headers.get("X-UserId");
+async function handlePostRequest(request, env) {
+  try {
+    const formData = await request.formData();
+    const file = formData.get('file');
+    if (!file /* instanceof File check here */) {
+      return new Response("Invalid file", { status: 400 });
+    }
+    const userId = request.headers.get("X-UserId");
 
-  if (!file || !userId) {
-    return new Response("File or UserId missing", { status: 400, headers: handleCorsHeaders(request) });
+    if (!userId || !file) {
+      return new Response("File or UserId missing", { status: 400 });
+    }
+
+    const filename = file.name;
+
+    await env.MY_BUCKET.put(filename, file.stream());
+    await sendLogToMongoDB(env, filename, userId);
+    return new Response(`Put ${filename} successfully!`, { headers: handleCorsHeaders(request) });
+  } catch (error) {
+    console.error(error);
+    return new Response("Internal Server Error", { status: 500 });
   }
-
-  const filename = file.name;
-
-  await env.MY_BUCKET.put(filename, file.stream());
-  await sendLogToMongoDB(env, filename, userId);
-  return new Response(`Put ${filename} successfully!`, { headers: handleCorsHeaders(request) });
 }
 
 var src_default = {
@@ -87,17 +96,16 @@ var src_default = {
     }
     try {
       switch (request.method) {
-        case "PUT":
-          return handlePutRequest(request, env);
-      }
-    } catch (error) {
-      console.error(`Error handling ${request.method} request:`, error);
-      return new Response("Internal Server Error", { status: 500 });
+        case "POST":
+          return handlePostRequest(request, env);
     }
+  } catch (error) {
+    console.error(`Error handling ${request.method} request:`, error);
+    return new Response("Internal Server Error", { status: 500 });
   }
+}
 };
 
 export {
-  src_default as default
+src_default as default
 };
-//# sourceMappingURL=index.js.map
