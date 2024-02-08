@@ -1,0 +1,11 @@
+2024-02-07 16:13:38,362:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:18:31,194:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:18:33,665:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:18:35,035:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:18:55,882:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:23:52,796:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:24:24,231:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:24:26,737:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:31:58,256:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:32:46,885:WARNING:No file URLs received from the Cloudflare worker.
+2024-02-07 16:41:39,755:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: 400 Client Error: Bad Request for url: https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
