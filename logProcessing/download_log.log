@@ -9,3 +9,61 @@
 2024-02-07 16:31:58,256:WARNING:No file URLs received from the Cloudflare worker.
 2024-02-07 16:32:46,885:WARNING:No file URLs received from the Cloudflare worker.
 2024-02-07 16:41:39,755:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: 400 Client Error: Bad Request for url: https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:18:51,510:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: 400 Client Error: Bad Request for url: https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:25:40,323:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:25:47,185:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:27:48,154:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:27:48,907:INFO:Received response from query worker: 200
+2024-02-08 01:27:48,907:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:27:48,908:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:27:48,908:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:28:35,397:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:28:35,626:INFO:Received response from query worker: 200
+2024-02-08 01:28:35,627:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:28:35,627:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:28:35,627:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:33:21,476:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:33:21,733:INFO:Received response from query worker: 200
+2024-02-08 01:33:21,733:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:33:21,733:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:33:21,733:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:35:28,869:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:35:29,177:INFO:Received response from query worker: 200
+2024-02-08 01:35:29,177:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:35:29,177:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:35:29,177:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:35:52,277:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:35:52,521:INFO:Received response from query worker: 200
+2024-02-08 01:35:52,521:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:35:52,521:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:35:52,521:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:36:07,041:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:36:07,359:INFO:Received response from query worker: 200
+2024-02-08 01:36:07,360:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:36:07,360:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:36:07,360:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:36:09,308:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:36:09,622:INFO:Received response from query worker: 200
+2024-02-08 01:36:09,622:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:36:09,622:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:36:09,623:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:37:22,955:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:37:23,311:INFO:Received response from query worker: 200
+2024-02-08 01:37:23,311:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:37:23,311:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:37:23,311:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:38:43,520:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:38:43,752:INFO:Received response from query worker: 200
+2024-02-08 01:38:43,752:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:38:43,752:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:38:43,752:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:38:50,631:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:38:50,836:INFO:Received response from query worker: 200
+2024-02-08 01:38:50,836:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:38:50,836:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:38:50,836:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 01:39:36,830:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 01:39:37,062:INFO:Received response from query worker: 200
+2024-02-08 01:39:37,063:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 01:39:37,063:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 01:39:37,063:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
