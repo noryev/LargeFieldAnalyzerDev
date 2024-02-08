@@ -19,12 +19,6 @@
 2024-02-07 19:18:59,601:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?url=
 2024-02-07 19:20:02,781:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?url=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
 2024-02-07 19:23:10,703:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?url=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
-2024-02-07 19:23:11,658:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?url=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-07 19:23:11,658:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-fr
+og-o2cd.deanlaughing.workers.dev/?url=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
 2024-02-07 19:31:27,008:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?fileURL=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
-2024-02-07 19:32:07,527:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?fileURL=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
-2024-02-07 19:32:09,553:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?fileURL=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
-2024-02-07 19:32:10,537:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?fileURL=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
-2024-02-07 19:32:44,498:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?fileURL=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
-2024-02-07 19:32:56,205:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?fileURL=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
-2024-02-07 19:32:58,943:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?fileURL=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
-2024-02-07 19:33:12,253:ERROR:HTTP Request failed: 404 Client Error: Not Found for url: https://worker-blue-frog-o2cd.deanlaughing.workers.dev/?fileURL=https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
