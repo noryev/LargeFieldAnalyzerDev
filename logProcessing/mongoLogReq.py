@@ -1,21 +1,24 @@
 import requests
 import logging
 import os
+from urllib.parse import urlparse
 
 # Configure logging
 logging.basicConfig(filename='download_log.log', level=logging.INFO, 
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
-def download_file(worker_url, file_name, output_folder):
+def download_file(worker_url, file_url, output_folder):
     """
     Download a file from the R2 bucket via a specific Cloudflare Worker.
     
     :param worker_url: URL of the Cloudflare Worker for downloading files.
-    :param file_name: Name of the file to download.
+    :param file_url: URL of the file to download.
     :param output_folder: Folder where the file will be saved.
     """
-    download_url = f"{worker_url}/{file_name}"
-    local_filename = os.path.join(output_folder, file_name)
+    parsed_url = urlparse(file_url)
+    file_path = parsed_url.path.lstrip('/')
+    download_url = f"{worker_url}/{file_path}"
+    local_filename = os.path.join(output_folder, os.path.basename(file_path))
 
     # Headers with auth-token
     headers = {
@@ -37,7 +40,7 @@ def download_file(worker_url, file_name, output_folder):
         return local_filename
 
     except Exception as e:
-        logging.error(f"Error downloading {file_name} from {download_url}. Error: {e}")
+        logging.error(f"Error downloading {os.path.basename(file_path)} from {download_url}. Error: {e}")
         return None
 
 def main():
@@ -49,7 +52,7 @@ def main():
         # URL of the Cloudflare worker for downloading files
         download_worker_url = 'https://lively-credit-66f3.deanlaughing.workers.dev' 
         # Output folder for downloaded files
-        output_folder = '/logs'  # Replace with your desired output folder path
+        output_folder = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/logProcessing/logs'  # Replace with your desired output folder path
 
         response = requests.get(query_url)
         logging.info(f"Received response from query worker: {response.status_code}")
@@ -58,15 +61,15 @@ def main():
             logging.error(f"Failed to get file list. Status code: {response.status_code}")
             return
 
-        file_names = response.json()
-        logging.info(f"Received file list: {file_names}")
+        file_urls = response.json()
+        logging.info(f"Received file list: {file_urls}")
 
-        if not file_names:
+        if not file_urls:
             logging.warning("No file names received from the Cloudflare worker.")
             return
 
-        for file_name in file_names:
-            download_file(download_worker_url, file_name, output_folder)
+        for file_url in file_urls:
+            download_file(download_worker_url, file_url, output_folder)
 
     except Exception as e:
         logging.error(f"Error in main function. Error: {e}")

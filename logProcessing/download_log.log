@@ -72,3 +72,28 @@
 2024-02-08 19:05:05,519:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
 2024-02-08 19:05:05,519:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
 2024-02-08 19:05:05,519:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 23:40:31,034:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 23:40:31,772:INFO:Received response from query worker: 200
+2024-02-08 23:40:31,773:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 23:40:31,773:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 23:40:31,773:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: [Errno 13] Permission denied: '/logs'
+2024-02-08 23:43:49,285:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 23:43:49,577:INFO:Received response from query worker: 200
+2024-02-08 23:43:49,578:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 23:43:49,578:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 23:43:49,645:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: 500 Server Error: Internal Server Error for url: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 23:50:07,555:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 23:50:08,207:INFO:Received response from query worker: 200
+2024-02-08 23:50:08,207:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 23:50:08,208:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 23:50:08,289:ERROR:Error downloading https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv. Error: 500 Server Error: Internal Server Error for url: https://lively-credit-66f3.deanlaughing.workers.dev/https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv
+2024-02-08 23:53:08,745:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 23:53:09,021:INFO:Received response from query worker: 200
+2024-02-08 23:53:09,022:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 23:53:09,022:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/logs/logs.csv
+2024-02-08 23:53:09,074:ERROR:Error downloading logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/logs/logs.csv. Error: 500 Server Error: Internal Server Error for url: https://lively-credit-66f3.deanlaughing.workers.dev/logs/logs.csv
+2024-02-08 23:58:30,498:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-08 23:58:30,987:INFO:Received response from query worker: 200
+2024-02-08 23:58:30,988:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-08 23:58:30,988:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/logs/logs.csv
+2024-02-08 23:58:31,060:ERROR:Error downloading logs.csv from https://lively-credit-66f3.deanlaughing.workers.dev/logs/logs.csv. Error: 500 Server Error: Internal Server Error for url: https://lively-credit-66f3.deanlaughing.workers.dev/logs/logs.csv
