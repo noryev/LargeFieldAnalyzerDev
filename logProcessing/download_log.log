@@ -188,3 +188,13 @@
 2024-02-09 00:41:20,227:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
 2024-02-09 00:41:20,227:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/logs.csv
 2024-02-09 00:41:20,556:INFO:File downloaded successfully: /home/major-shepard/Documents/logs.csv
+2024-02-09 14:36:49,719:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-09 14:36:51,476:INFO:Received response from query worker: 200
+2024-02-09 14:36:51,476:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-09 14:36:51,476:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/logs.csv
+2024-02-09 14:36:51,812:INFO:File downloaded successfully: /home/major-shepard/Documents/logs.csv
+2024-02-09 14:39:42,286:INFO:Querying file list from: https://log-query.deanlaughing.workers.dev
+2024-02-09 14:39:43,142:INFO:Received response from query worker: 200
+2024-02-09 14:39:43,142:INFO:Received file list: ['https://5ad2ddf9aa06683d90aa5df60149f527.r2.cloudflarestorage.com/logs/logs.csv']
+2024-02-09 14:39:43,142:INFO:Attempting to download file: https://lively-credit-66f3.deanlaughing.workers.dev/logs.csv
+2024-02-09 14:39:43,476:INFO:File downloaded successfully: /home/major-shepard/Documents/LargeFieldDataAnalyzer/logProcessing/logs/logs.csv

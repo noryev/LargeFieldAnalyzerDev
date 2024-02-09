@@ -50,7 +50,7 @@ def main():
         # URL of the Cloudflare worker for downloading files
         download_worker_url = 'https://lively-credit-66f3.deanlaughing.workers.dev' 
         # Output folder for downloaded files
-        output_folder = '/home/major-shepard/Documents'  # Replace with your desired output folder path
+        output_folder = '/home/major-shepard/Documents/LargeFieldDataAnalyzer/logProcessing/logs'  # Replace with your desired output folder path
 
         response = requests.get(query_url)
         logging.info(f"Received response from query worker: {response.status_code}")
