@@ -28,16 +28,31 @@ def submit_url_to_cuckoo(url):
         if result.returncode == 0:
             print(f"Successfully submitted URL: {url}")
             print(result.stdout)
+            return extract_task_id_from_result(result.stdout)
         else:
             print(f"Error submitting URL: {url}")
             print(result.stderr)
+            return None
     except Exception as e:
         print(f"Exception occurred while submitting URL: {e}")
+        return None
+
+def extract_task_id_from_result(result):
+    # Regular expression to match 'task with ID #<number>'
+    match = re.search(r"task with ID #(\d+)", result)
+    if match:
+        # Extract and return the task ID
+        return int(match.group(1))
+    else:
+        print("Task ID not found in the output.")
+        return None
 
 # Extract URLs from the CSV file
 file_path = './logs/logs.csv'
 urls = extract_urls_from_csv(file_path)
 
-# Submit each URL to Cuckoo
 for url in urls:
-    submit_url_to_cuckoo(url)
+    task_id = submit_url_to_cuckoo(url)
+    if task_id is not None:
+        print(f"Task ID for URL {url}: {task_id}")
+    # Perform additional processing if necessary
