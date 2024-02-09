@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+import subprocess
 
 def extract_urls_from_csv(file_path):
     # Read the CSV file
@@ -20,9 +21,23 @@ def extract_urls_from_csv(file_path):
 
     return urls
 
-# Replace 'path_to_your_csv_file.csv' with the path to your CSV file
+def submit_url_to_cuckoo(url):
+    command = ["cuckoo", "submit", "--url", url]
+    try:
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode == 0:
+            print(f"Successfully submitted URL: {url}")
+            print(result.stdout)
+        else:
+            print(f"Error submitting URL: {url}")
+            print(result.stderr)
+    except Exception as e:
+        print(f"Exception occurred while submitting URL: {e}")
+
+# Extract URLs from the CSV file
 file_path = './logs/logs.csv'
 urls = extract_urls_from_csv(file_path)
 
-# Now `urls` contains all the URLs found in the CSV file
-print(urls)
+# Submit each URL to Cuckoo
+for url in urls:
+    submit_url_to_cuckoo(url)
