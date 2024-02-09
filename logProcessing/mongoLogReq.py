@@ -47,8 +47,7 @@ def main():
         logging.info(f"Querying file list from: {query_url}")
 
         # URL of the Cloudflare worker for downloading files
-        download_worker_url = 'https://lively-credit-66f3.deanlaughing.workers.dev' # Replace with the actual worker URL
-
+        download_worker_url = 'https://lively-credit-66f3.deanlaughing.workers.dev' 
         # Output folder for downloaded files
         output_folder = '/logs'  # Replace with your desired output folder path
 

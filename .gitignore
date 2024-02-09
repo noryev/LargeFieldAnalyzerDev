@@ -1,1 +1,3 @@
 logProcessing/.env
+logProcessing/logs
+logProcessing/download_log.log
