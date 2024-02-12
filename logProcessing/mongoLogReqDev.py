@@ -3,6 +3,9 @@ import logging
 import os
 from urllib.parse import urlparse
 
+AUTH_TOKEN = os.getenv('AUTH_TOKEN')
+
+
 # Configure logging
 logging.basicConfig(filename='download_log.log', level=logging.INFO, 
                     format='%(asctime)s:%(levelname)s:%(message)s')
@@ -20,7 +23,7 @@ def download_file(worker_url, file_name, output_folder):
 
     # Headers with auth-token
     headers = {
-        'auth-token': 'jwrld999'
+        'auth-token': os.getenv('AUTH_TOKEN')
     }
 
     try:

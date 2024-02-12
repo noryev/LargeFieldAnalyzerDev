@@ -1,6 +1,9 @@
 import pandas as pd
 import re
 import subprocess
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def extract_urls_from_csv(file_path):
     # Read the CSV file
